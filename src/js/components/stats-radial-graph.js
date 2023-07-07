@@ -73,10 +73,10 @@ const config = {
 		cutout: "75%",
 		layout: {
 			padding: {
-				top: 35,
-				bottom: 35,
-				left: 35,
-				right: 35,
+				top: 40,
+				bottom: 40,
+				left: 40,
+				right: 40,
 			},
 		},
 		rotation: 45,
