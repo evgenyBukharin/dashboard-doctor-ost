@@ -7,6 +7,9 @@
 			align-items: center;
 			max-width: 61px;
 			width: 100%;
+			&-static {
+				max-width: 46px;
+			}
 		}
 		&-flex {
 			display: flex;
