@@ -32060,19 +32060,7 @@ const stats_radial_graph_data = {
   labels: [""],
   datasets: [{
     data: statsDataKeys.map(key => statsRadialData[key]),
-    backgroundColor: stats_radial_graph_colors,
-    datalabels: {
-      labels: {
-        index: {
-          color: "#1e1e1e",
-          font: {
-            size: 8
-          },
-          align: "end",
-          anchor: "end"
-        }
-      }
-    }
+    backgroundColor: stats_radial_graph_colors
   }]
 };
 const stats_radial_graph_config = {
@@ -32084,35 +32072,40 @@ const stats_radial_graph_config = {
         display: false
       },
       tooltip: {
-        enabled: false
+        enabled: false,
+        position: "nearest",
+        external: stats_radial_graph_externalTooltipHandler
       },
       doughnutlabel: {
         paddingPercentage: 5,
         labels: [{
           text: "Всего",
           font: {
-            size: 8,
+            size: 14,
             weight: "400"
           }
         }, {
           text: calcWholeSum(Object.values(statsRadialData)) + " руб.",
           font: {
-            size: 8,
+            size: 14,
             weight: "500"
           }
         }]
+      },
+      datalabels: {
+        display: false
       }
     },
     cutout: "75%",
     layout: {
       padding: {
-        top: 40,
-        bottom: 40,
-        left: 40,
-        right: 40
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10
       }
     },
-    rotation: 45
+    rotation: -15
   }
 };
 const statsRadialChart = new auto(stats_radial_graph_ctx, stats_radial_graph_config);
@@ -32124,6 +32117,95 @@ function calcWholeSum(data) {
     sum += value;
   });
   return sum;
+}
+function stats_radial_graph_getOrCreateTooltip(chart) {
+  let tooltipEl = stats_radial_graph_ctx.parentNode.querySelector(".hero__container-tooltip");
+  if (!tooltipEl) {
+    tooltipEl = document.createElement("div");
+    tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+    tooltipEl.style.borderRadius = "100%";
+    tooltipEl.style.color = "white";
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.pointerEvents = "none";
+    tooltipEl.style.position = "absolute";
+    tooltipEl.style.transform = "translate(-50%, 0)";
+    tooltipEl.style.transition = "all .1s ease";
+    const table = document.createElement("div");
+    table.style.margin = "0px";
+    tooltipEl.appendChild(table);
+    chart.canvas.parentNode.appendChild(tooltipEl);
+  }
+  return tooltipEl;
+}
+function stats_radial_graph_externalTooltipHandler(context) {
+  // Tooltip Element
+  const {
+    chart,
+    tooltip
+  } = context;
+  const tooltipEl = stats_radial_graph_getOrCreateTooltip(chart);
+
+  // Hide if no tooltip
+  if (tooltip.opacity === 0) {
+    tooltipEl.style.opacity = 0;
+    return;
+  }
+
+  // Set Text
+  if (tooltip.body) {
+    const titleLines = tooltip.title || [];
+    const bodyLines = tooltip.body.map(b => b.lines);
+    const tableHead = document.createElement("div");
+    tableHead.classList = "hero__header-tooltip";
+    titleLines.forEach((title, i) => {
+      const colors = tooltip.labelColors[i];
+      const span = document.createElement("div");
+      span.classList = "hero__color-tooltip";
+      span.style.background = colors.backgroundColor;
+      span.style.borderColor = colors.borderColor;
+      const tr = document.createElement("div");
+      tr.style.borderWidth = 0;
+      const th = document.createElement("div");
+      th.style.borderWidth = 0;
+      const text = document.createTextNode(title);
+      tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+      th.appendChild(text);
+      tr.appendChild(th);
+      tableHead.appendChild(span);
+      tableHead.appendChild(tr);
+    });
+    const tableBody = document.createElement("div");
+    tableBody.classList = "hero__body-tooltip";
+    bodyLines.forEach((body, i) => {
+      const tr = document.createElement("div");
+      tr.innerHTML = body + " руб.";
+      const foundedData = statsDataKeys.find(element => {
+        element == tooltip.title[i];
+        return element;
+      });
+      tableBody.appendChild(tr);
+    });
+    const tableRoot = tooltipEl.querySelector("div");
+    tableRoot.classList = "hero__content-tooltip";
+
+    // Remove old children
+    while (tableRoot.firstChild) {
+      tableRoot.firstChild.remove();
+    }
+
+    // Add new children
+    tableRoot.appendChild(tableHead);
+    tableRoot.appendChild(tableBody);
+  }
+  const {
+    offsetLeft: positionX,
+    offsetTop: positionY
+  } = chart.canvas;
+
+  // Display, position, and set styles for font
+  tooltipEl.style.opacity = 1;
+  tooltipEl.style.left = positionX + tooltip.caretX + "px";
+  tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
 }
 ;// CONCATENATED MODULE: ./src/js/components/theme-change.js
 
@@ -32145,6 +32227,7 @@ const statsPersentageStaticBitrix = document.querySelector(".stats__text-persent
 const contactsLabelBitrix = document.querySelector(".contacts__label-bitrix");
 const contactsLabel1c = document.querySelector(".contacts__label-1с");
 const contactSliders = document.querySelectorAll(".contacts__container-slider");
+const statsButtonsContainers = document.querySelectorAll(".stats__block-buttons");
 let currentTheme = "theme1c";
 const themes = {
   theme1c: {
@@ -32181,6 +32264,9 @@ function changeThemeContent() {
   chartBitrix.classList.toggle("stats__canvas-bar-visible");
   contactSliders.forEach(slider => {
     slider.classList.toggle("contacts__container-slider-visible");
+  });
+  statsButtonsContainers.forEach(container => {
+    container.classList.toggle("stats__block-buttons-visible");
   });
   changeText();
 }

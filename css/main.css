@@ -189,7 +189,8 @@ section:not(:last-child) {
   pointer-events: none;
   font-size: 14px;
   font-weight: 500;
-  opacity: 0
+  opacity: 0;
+  z-index: 800
 }
 .hero__column {
   max-width: 509px;
@@ -412,6 +413,10 @@ input:checked + .slider:before {
   -ms-flex-align: center;
   align-items: center
 }
+.stats__container-tooltip {
+  padding: 8px 12px 8px 4px;
+  border-color: var(--black-color)
+}
 .stats__canvas-bar {
   -webkit-transition: opacity .6s,visibility .6s;
   transition: opacity .6s,visibility .6s
@@ -436,7 +441,8 @@ input:checked + .slider:before {
   border: 1px solid var(--orange-color);
   border-radius: 10px;
   background: var(--grey-color);
-  padding: 25px 15px 0
+  padding: 25px 15px 0;
+  max-width: 427px
 }
 .stats__block-contacts {
   display: -webkit-box;
@@ -445,8 +451,7 @@ input:checked + .slider:before {
   -webkit-box-align: start;
   -ms-flex-align: start;
   align-items: flex-start;
-  gap: 40px;
-  max-width: 397px
+  gap: 40px
 }
 .stats__block-cases {
   display: -webkit-box;
@@ -455,13 +460,40 @@ input:checked + .slider:before {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  max-width: unset;
   padding-top: 0
 }
 .stats__block-cases-flex {
   padding-top: 25px
 }
 .stats__block-buttons {
+  border: none;
+  padding: 0;
+  max-width: 171px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 25px;
+  background: 0 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  -webkit-transition: opacity .6s,visibility .6s;
+  transition: opacity .6s,visibility .6s
+}
+.stats__block-buttons-visible {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all
+}
+.stats__block-buttons-container {
   border: none;
   padding: 0;
   max-width: 171px;
@@ -510,7 +542,8 @@ input:checked + .slider:before {
   border-color: transparent
 }
 .stats__title {
-  margin-bottom: 30px
+  margin-bottom: 30px;
+  white-space: nowrap
 }
 .stats__list {
   max-width: 227px
