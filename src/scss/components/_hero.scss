@@ -1,0 +1,212 @@
+.hero {
+	padding-top: 50px;
+	&__container {
+		padding: 50px;
+		padding-right: 54px;
+		border: 1px solid var(--orange-color);
+		border-radius: 10px;
+		box-shadow: 0px 0px 50px 5px rgba(41, 155, 156, 0.2);
+		background: var(--grey-color);
+		display: flex;
+		justify-content: space-between;
+		&-icon-text {
+			display: flex;
+			align-items: center;
+			max-width: 154px;
+			width: 100%;
+		}
+		&-data {
+			display: flex;
+		}
+		&-switch {
+			display: flex;
+			justify-content: flex-end;
+			margin-bottom: 44px;
+		}
+		&-graph {
+			max-width: 400px;
+			max-height: 400px;
+			margin: 0 auto;
+		}
+		&-tooltip {
+			position: absolute;
+			border: 1px solid var(--orange-color);
+			border-radius: 10px 10px 10px 0px;
+			background: var(--white-color);
+			padding: 8px 13px 10px 18px;
+			pointer-events: none;
+			font-size: 14px;
+			font-weight: 500;
+			opacity: 0;
+		}
+	}
+	&__column {
+		max-width: 509px;
+		width: 100%;
+		&-graph {
+			max-width: 554px;
+		}
+	}
+	&__list {
+		display: flex;
+		flex-direction: column;
+		max-width: 400px;
+	}
+	&__item {
+		display: flex;
+		align-items: center;
+		column-gap: 8px;
+		padding: 10px 20px 8px 15px;
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--orange-color);
+		}
+	}
+	&__icon {
+		&-ellipse {
+			width: 10px;
+			height: 10px;
+			min-width: 10px;
+			min-height: 10px;
+			margin-right: 20px;
+		}
+	}
+	&__text {
+		&-persent {
+			max-width: 76px;
+			width: 100%;
+			white-space: nowrap;
+			text-align: right;
+		}
+		&-count {
+			display: block;
+			max-width: 121px;
+			width: 100%;
+			text-align: right;
+		}
+	}
+	&__content {
+		&-tooltip {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+	}
+	&__header {
+		&-tooltip {
+			display: flex;
+			align-items: center;
+		}
+	}
+	&__body {
+		&-tooltip {
+			position: relative;
+			font-size: 18px;
+			font-weight: 400;
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+			gap: 13px;
+			&::after {
+				content: "";
+				position: absolute;
+				top: 50%;
+				width: 100%;
+				height: 1px;
+				transform: translateY(-50%);
+				background: #299b9c;
+				opacity: 0.2;
+				border-radius: 1px;
+			}
+		}
+	}
+	&__color {
+		&-tooltip {
+			border-width: 2px;
+			margin-right: 10px;
+			height: 10px;
+			width: 10px;
+			display: inline-block;
+			border-radius: 100%;
+		}
+	}
+}
+
+/* The switch - the box around the slider */
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 200px;
+	height: 30px;
+	&__text {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 50%;
+		z-index: 100;
+		color: var(--black-color);
+		transition: color 0.4s;
+		&:first-child {
+			color: var(--white-color);
+		}
+		&:last-child {
+			color: var(--black-color);
+		}
+	}
+	&-active {
+		& .switch__text {
+			&:first-child {
+				color: var(--black-color);
+			}
+			&:last-child {
+				color: var(--white-color);
+			}
+		}
+	}
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+
+/* The slider */
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: var(--white-color);
+	transition: all 0.4s;
+	border: 1px solid #e15335;
+	border-radius: 5px;
+	display: flex;
+}
+
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 100%;
+	width: 100px;
+	left: -1px;
+	bottom: 0;
+	background: #e15335;
+	transition: all 0.4s;
+}
+
+input:checked + .slider {
+	border: 1px solid #299b9c;
+}
+
+input:checked + .slider:before {
+	transform: translateX(100%);
+	background: #299b9c;
+}
+
+/* Rounded sliders */
+.slider.round:before {
+	border-radius: 5px;
+}
