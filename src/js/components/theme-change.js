@@ -19,6 +19,7 @@ const statsPersentageStaticBitrix = document.querySelector(".stats__text-persent
 const contactsLabelBitrix = document.querySelector(".contacts__label-bitrix");
 const contactsLabel1c = document.querySelector(".contacts__label-1с");
 const contactSliders = document.querySelectorAll(".contacts__container-slider");
+const statsButtonsContainers = document.querySelectorAll(".stats__block-buttons");
 
 let currentTheme = "theme1c";
 const themes = {
@@ -57,6 +58,9 @@ function changeThemeContent() {
 	chartBitrix.classList.toggle("stats__canvas-bar-visible");
 	contactSliders.forEach((slider) => {
 		slider.classList.toggle("contacts__container-slider-visible");
+	});
+	statsButtonsContainers.forEach((container) => {
+		container.classList.toggle("stats__block-buttons-visible");
 	});
 	changeText();
 }
