@@ -16,6 +16,9 @@ const statsCountStatic1c = document.querySelector(".stats__text-static-1c");
 const statsCountStaticBitrix = document.querySelector(".stats__text-static-bitrix");
 const statsPersentageStatic1c = document.querySelector(".stats__text-persentage-static-1c");
 const statsPersentageStaticBitrix = document.querySelector(".stats__text-persentage-static-bitrix");
+const contactsLabelBitrix = document.querySelector(".contacts__label-bitrix");
+const contactsLabel1c = document.querySelector(".contacts__label-1с");
+const contactSliders = document.querySelectorAll(".contacts__container-slider");
 
 let currentTheme = "theme1c";
 const themes = {
@@ -52,6 +55,9 @@ function changeTheme() {
 function changeThemeContent() {
 	chart1c.classList.toggle("stats__canvas-bar-visible");
 	chartBitrix.classList.toggle("stats__canvas-bar-visible");
+	contactSliders.forEach((slider) => {
+		slider.classList.toggle("contacts__container-slider-visible");
+	});
 	changeText();
 }
 
@@ -61,11 +67,15 @@ function changeText() {
 		statsLabel.innerHTML = "Б24";
 		statsContactsCount.innerHTML = graphDataBitrix.bitrix + " чел.";
 		statsPersentage.innerHTML = Math.round((graphDataBitrix.bitrix * 100) / graphDataBitrix.all) + "%";
+		contactsLabel1c.innerHTML = "Б24";
+		contactsLabelBitrix.innerHTML = "1C";
 	} else {
 		statsTitleFluid.innerHTML = "1C";
 		statsLabel.innerHTML = "1C";
 		statsContactsCount.innerHTML = graphData1c[graphData1cKeys[0]] + " чел.";
 		statsPersentage.innerHTML = Math.round((graphData1c[graphData1cKeys[0]] * 100) / graphData1c.all) + "%";
+		contactsLabelBitrix.innerHTML = "Б24";
+		contactsLabel1c.innerHTML = "1C";
 	}
 }
 

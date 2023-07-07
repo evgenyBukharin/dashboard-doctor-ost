@@ -1,0 +1,101 @@
+.contacts {
+	&__wrapper {
+		&-main {
+			overflow: hidden;
+		}
+	}
+	&__container {
+		border: 1px solid var(--orange-color);
+		border-radius: 10px;
+		background: var(--grey-color);
+		padding: 50px;
+		padding-bottom: 15px;
+		&-controls {
+			display: flex;
+			justify-content: flex-end;
+			align-items: center;
+			gap: 30px;
+		}
+		&-sliders {
+			position: relative;
+		}
+		&-slider {
+			position: absolute;
+			top: 0;
+			left: 0;
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+			transition: opacity 0.6s ease, visibility 0.6s ease;
+			&-visible {
+				position: relative;
+				opacity: 1;
+				visibility: visible;
+				pointer-events: all;
+			}
+		}
+	}
+	&__item {
+		display: flex;
+		align-items: center;
+		column-gap: 10px;
+		padding: 10px 20px 8px 15px;
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--orange-color);
+		}
+	}
+	&__heading {
+		display: flex;
+		align-items: center;
+		column-gap: 8px;
+		padding: 10px 20px 8px 15px;
+		border-bottom: 1px solid var(--orange-color);
+	}
+	&__name {
+		max-width: 393px;
+		width: 100%;
+		&-heading {
+			text-align: center;
+		}
+	}
+	&__phone {
+		max-width: 244px;
+		width: 100%;
+		text-align: center;
+	}
+	&__deals {
+		max-width: 293px;
+		width: 100%;
+		text-align: center;
+	}
+	&__list {
+		margin-bottom: 25px;
+	}
+	&__pagination {
+		width: fit-content !important;
+	}
+	&__bullet {
+		background: transparent;
+		font-size: 22px;
+		font-weight: 400;
+		line-height: 27px;
+		margin-right: 30px !important;
+		margin-left: 0 !important;
+		opacity: 1;
+		width: fit-content !important;
+		height: fit-content !important;
+		&:last-child {
+			margin-right: 0 !important;
+		}
+		&-active {
+			font-weight: 500;
+			color: var(--orange-color);
+		}
+	}
+	&__button {
+		display: flex;
+		&-next {
+			transform: rotate(180deg);
+		}
+	}
+}
