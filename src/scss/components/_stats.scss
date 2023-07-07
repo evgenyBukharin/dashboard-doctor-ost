@@ -61,6 +61,7 @@
 		}
 	}
 	&__block {
+		position: relative;
 		width: 100%;
 		border: 1px solid var(--orange-color);
 		border-radius: 10px;
@@ -81,6 +82,7 @@
 			}
 		}
 		&-buttons {
+			width: 100%;
 			border: none;
 			padding: 0;
 			max-width: 171px;
