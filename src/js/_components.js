@@ -4,3 +4,6 @@ import "./components/theme-change";
 import "./components/bar-graph";
 import "./components/stats-radial-graph";
 import "./components/contacts-handler";
+import "./components/file-input";
+import "./components/data-buttons";
+import "./components/buttons-height";

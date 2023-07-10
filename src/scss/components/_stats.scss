@@ -124,6 +124,7 @@
 		transition: border 0.3s ease, color 0.3s ease, background 0.3s ease;
 		&-download {
 			border: 1px solid #e15335;
+			outline: none;
 			&:hover {
 				background: #e15335;
 				color: var(--white-color);
@@ -132,6 +133,7 @@
 		}
 		&-generate {
 			border: 1px solid #299b9c;
+			outline: none;
 			&:hover {
 				background: #299b9c;
 				color: var(--white-color);
@@ -226,4 +228,38 @@
 			}
 		}
 	}
+}
+
+input[type="date"] {
+	position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: auto;
+	height: auto;
+	color: transparent;
+	background: transparent;
+}
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button {
+	z-index: -10;
+}
+
+input[type="date"]::-webkit-input-placeholder {
+	z-index: 99;
+}
+
+input[type="date"]:placeholder {
+	z-index: 99;
+}
+input[type="date"]:not(.has-value):before {
+	content: attr(placeholder);
+	text-align: center;
+	width: 100%;
 }
