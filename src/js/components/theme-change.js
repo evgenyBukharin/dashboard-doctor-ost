@@ -1,5 +1,7 @@
 import { graphData1c, graphDataBitrix, graphData1cKeys } from "./bar-graph.js";
 import { statsRadialData, calcWholeSum } from "./stats-radial-graph.js";
+import { heroList1c } from "./hero-radial-1c.js";
+import { heroListBitrix } from "./hero-radial-bitrix.js";
 
 const switchBtn = document.querySelector(".switch");
 const root = document.querySelector(":root");
@@ -20,6 +22,8 @@ const contactsLabelBitrix = document.querySelector(".contacts__label-bitrix");
 const contactsLabel1c = document.querySelector(".contacts__label-1с");
 const contactSliders = document.querySelectorAll(".contacts__container-slider");
 const statsButtonsContainers = document.querySelectorAll(".stats__block-buttons");
+const heroChart1cContainer = document.querySelector(".hero__container-graph-1c");
+const heroChartBitrixContainer = document.querySelector(".hero__container-graph-bitrix");
 
 let currentTheme = "theme1c";
 const themes = {
@@ -54,6 +58,10 @@ function changeTheme() {
 }
 
 function changeThemeContent() {
+	heroList1c.classList.toggle("hero__list-visible");
+	heroChart1cContainer.classList.toggle("hero__container-graph-visible");
+	heroListBitrix.classList.toggle("hero__list-visible");
+	heroChartBitrixContainer.classList.toggle("hero__container-graph-visible");
 	chart1c.classList.toggle("stats__canvas-bar-visible");
 	chartBitrix.classList.toggle("stats__canvas-bar-visible");
 	contactSliders.forEach((slider) => {

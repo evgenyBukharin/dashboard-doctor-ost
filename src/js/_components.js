@@ -1,4 +1,6 @@
-import "./components/hero-radial-graph";
+// import "./components/get-graphs-data";
+import "./components/hero-radial-1c";
+import "./components/hero-radial-bitrix";
 import "./components/switch";
 import "./components/theme-change";
 import "./components/bar-graph";

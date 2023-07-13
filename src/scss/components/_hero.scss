@@ -24,9 +24,32 @@
 			margin-bottom: 44px;
 		}
 		&-graph {
+			position: relative;
 			max-width: 400px;
 			max-height: 400px;
 			margin: 0 auto;
+			&-1c {
+				position: absolute;
+				top: 0;
+				left: 0;
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+			}
+			&-bitrix {
+				position: absolute;
+				top: 0;
+				left: 0;
+				opacity: 0;
+				visibility: hidden;
+				pointer-events: none;
+			}
+			&-visible {
+				position: relative;
+				opacity: 1;
+				visibility: visible;
+				pointer-events: all;
+			}
 		}
 		&-tooltip {
 			position: absolute;
@@ -52,6 +75,28 @@
 		display: flex;
 		flex-direction: column;
 		max-width: 400px;
+		&-1c {
+			position: absolute;
+			top: 0;
+			left: 0;
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+		}
+		&-bitrix {
+			position: absolute;
+			top: 0;
+			left: 0;
+			opacity: 0;
+			visibility: hidden;
+			pointer-events: none;
+		}
+		&-visible {
+			position: relative;
+			opacity: 1;
+			visibility: visible;
+			pointer-events: all;
+		}
 	}
 	&__item {
 		display: flex;

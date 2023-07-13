@@ -2,6 +2,7 @@ import Chart from "chart.js/auto";
 
 const ctx = document.getElementById("statsBarChart-1c");
 const ctxBitrix = document.getElementById("statsBarChart-bitrix");
+
 // данные которые используются для отрисовки диаграммы и списка
 export const graphData1c = {
 	"1c": 140,

@@ -6,9 +6,9 @@ import DoughnutLabel from "chartjs-plugin-doughnutlabel-rebourne";
 Chart.register(ChartDataLabels);
 Chart.register(DoughnutLabel);
 
-const ctx = document.getElementById("myChart");
+const ctx = document.getElementById("myChartBitrix");
+export const heroListBitrix = document.querySelector(".hero__list-bitrix");
 
-const heroList = document.querySelector(".hero__list");
 const heroItemInner = `
 	<div class="hero__container-icon-text">
 		<svg class="hero__icon-ellipse">
@@ -20,17 +20,17 @@ const heroItemInner = `
 	<span class="hero__text hero__text-count title__h4"></span>`;
 
 // данные которые используются для отрисовки диаграммы и списка
-const heroData = [
-	{ label: "1 прием", persentage: "18%", count: 50 },
-	{ label: "2 прием", persentage: "30%", count: 3 },
-	{ label: "3 приема", persentage: "5%", count: 44 },
+const heroDataBitrix = [
+	{ label: "1 прием", persentage: "18%", count: 150 },
+	{ label: "2 прием", persentage: "30%", count: 6 },
+	{ label: "3 приема", persentage: "5%", count: 24 },
 	{ label: "4 приема", persentage: "11%", count: 112 },
-	{ label: "5 приемов", persentage: "20%", count: 23 },
+	{ label: "5 приемов", persentage: "20%", count: 43 },
 	{ label: "6 приемов", persentage: "12%", count: 35 },
 	{ label: "7 приемов", persentage: "4%", count: 32 },
 	{ label: "8 приемов", persentage: "5%", count: 98 },
-	{ label: "9 приемов", persentage: "12%", count: 23 },
-	{ label: "10+ приемов", persentage: "0.5%", count: 3 },
+	{ label: "9 приемов", persentage: "12%", count: 32 },
+	{ label: "10+ приемов", persentage: "0.5%", count: 12 },
 ];
 
 const colors = [
@@ -46,7 +46,7 @@ const colors = [
 	"#FF002E",
 ];
 
-heroData.forEach((row, idx) => {
+heroDataBitrix.forEach((row, idx) => {
 	// создаем новый айтем
 	let heroItem = document.createElement("li");
 	heroItem.classList.add("hero__item");
@@ -59,15 +59,15 @@ heroData.forEach((row, idx) => {
 	heroItem.querySelector(".hero__icon-ellipse").style.fill = colors[idx];
 
 	// засовываем в лист
-	heroList.appendChild(heroItem);
+	heroListBitrix.appendChild(heroItem);
 });
 
-const data = {
-	labels: heroData.map((row) => row.label),
+const dataBitrix = {
+	labels: heroDataBitrix.map((row) => row.label),
 	datasets: [
 		{
 			label: "",
-			data: heroData.map((row) => row.count),
+			data: heroDataBitrix.map((row) => row.count),
 			backgroundColor: colors,
 			datalabels: {
 				labels: {
@@ -85,9 +85,9 @@ const data = {
 	],
 };
 
-const config = {
+const configBitrix = {
 	type: "doughnut",
-	data: data,
+	data: dataBitrix,
 	options: {
 		plugins: {
 			legend: {
@@ -117,7 +117,7 @@ const config = {
 						},
 					},
 					{
-						text: calcAllPatients(heroData),
+						text: calcAllPatients(heroDataBitrix),
 						font: {
 							size: 24,
 							weight: "500",
@@ -160,7 +160,7 @@ const config = {
 	},
 };
 
-const heroChart = new Chart(ctx, config);
+const heroChartBitrix = new Chart(ctx, configBitrix);
 
 // считает общее количество пациентов из data
 function calcAllPatients(data) {
@@ -245,7 +245,7 @@ function externalTooltipHandler(context) {
 
 			const td = document.createElement("div");
 
-			const foundedData = heroData.find((element) => {
+			const foundedData = heroDataBitrix.find((element) => {
 				element.label == tooltip.title[i];
 				return element;
 			});

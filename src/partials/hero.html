@@ -3,7 +3,10 @@
 		<div class="hero__container">
 			<div class="hero__column">
 				<h2 class="title title__h2 hero__title">Конверсия лидов</h2>
-				<ul class="list-reset hero__list"></ul>
+				<div class="hero__container-lists">
+					<ul class="list-reset hero__list hero__list-1c hero__list-visible"></ul>
+					<ul class="list-reset hero__list hero__list-bitrix"></ul>
+				</div>
 			</div>
 			<div class="hero__column hero__column-graph">
 				<div class="hero__container-switch">
@@ -16,9 +19,17 @@
 					</label>
 				</div>
 				<div class="hero__container-graph">
-					<canvas id="myChart" width="400" height="400"></canvas>
-					<div class="hero__container-tooltip">
-						<div></div>
+					<div class="hero__container-graph-1c hero__container-graph-visible">
+						<canvas id="myChart1c" width="400" height="400"></canvas>
+						<div class="hero__container-tooltip">
+							<div></div>
+						</div>
+					</div>
+					<div class="hero__container-graph-bitrix">
+						<canvas id="myChartBitrix" width="400" height="400"></canvas>
+						<div class="hero__container-tooltip">
+							<div></div>
+						</div>
 					</div>
 				</div>
 			</div>
