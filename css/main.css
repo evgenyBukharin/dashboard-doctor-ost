@@ -186,9 +186,25 @@ section:not(:last-child) {
   margin-bottom: 44px
 }
 .hero__container-graph {
+  position: relative;
   max-width: 400px;
   max-height: 400px;
   margin: 0 auto
+}
+.hero__container-graph-1c,
+.hero__container-graph-bitrix {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none
+}
+.hero__container-graph-visible {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all
 }
 .hero__container-tooltip {
   position: absolute;
@@ -218,6 +234,21 @@ section:not(:last-child) {
   -ms-flex-direction: column;
   flex-direction: column;
   max-width: 400px
+}
+.hero__list-1c,
+.hero__list-bitrix {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none
+}
+.hero__list-visible {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all
 }
 .hero__item {
   display: -webkit-box;
