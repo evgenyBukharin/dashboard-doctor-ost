@@ -46,15 +46,15 @@ const config = {
 					{
 						text: "Всего",
 						font: {
-							size: 14,
+							size: 10,
 							weight: "400",
 						},
 					},
 					{
-						text: calcWholeSum(Object.values(statsRadialData)) + " руб.",
+						text: format(new String(calcWholeSum(Object.values(statsRadialData)))) + " ₽",
 						font: {
-							size: 14,
-							weight: "500",
+							size: 10,
+							weight: "700",
 						},
 					},
 				],
@@ -185,4 +185,15 @@ function externalTooltipHandler(context) {
 	tooltipEl.style.opacity = 1;
 	tooltipEl.style.left = positionX + tooltip.caretX + "px";
 	tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+}
+
+function format(str) {
+	const s = str.length;
+	const chars = str.split("");
+	const strWithSpaces = chars.reduceRight((acc, char, i) => {
+		const spaceOrNothing = (s - i) % 3 === 0 ? " " : "";
+		return spaceOrNothing + char + acc;
+	}, "");
+
+	return strWithSpaces[0] === " " ? strWithSpaces.slice(1) : strWithSpaces;
 }

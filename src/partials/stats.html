@@ -2,43 +2,50 @@
 	<div class="container stats__container">
 		<div class="stats__block stats__block-contacts">
 			<div class="stats__container-flex">
-				<h3 class="title title__h3 stats__title">Контакты <span class="stats__title-fluid">1С</span></h3>
+				<h3 class="title title__h3 stats__title">Конверсия лидов</h3>
 				<ul class="list-reset stats__list">
-					<li class="stats__item">
+					<li class="stats__item stats__item-conversy">
 						<div class="stats__container-icon-text">
-							<svg class="stats__icon-ellipse">
+							<svg class="stats__icon-ellipse stats__icon-ellipse-transparent">
 								<use xlink:href="img/sprite.svg#ellipse"></use>
 							</svg>
-							<span class="stats__text stats__text-label title__h4"></span>
+							<span class="stats__text stats__text-label title__h4">Без приема</span>
 						</div>
-						<span class="stats__text stats__text-persent title__h4"></span>
-						<span class="stats__text stats__text-count title__h4"></span>
+						<span class="stats__text stats__text-persent stats__text-persent-empty title__h4"></span>
+						<span class="stats__text stats__text-count stats__text-count-empty title__h4"></span>
 					</li>
-					<li class="stats__item">
+					<li class="stats__item stats__item-conversy">
 						<div class="stats__container-icon-text">
-							<svg class="stats__icon-ellipse stats__icon-ellipse-all">
+							<svg class="stats__icon-ellipse stats__icon-ellipse-static-orange">
+								<use xlink:href="img/sprite.svg#ellipse"></use>
+							</svg>
+							<span class="stats__text stats__text-label title__h4">Приемы - 1С</span>
+						</div>
+						<span class="stats__text stats__text-persent stats__text-persent-1c title__h4"></span>
+						<span class="stats__text stats__text-count stats__text-count-1c title__h4"></span>
+					</li>
+					<li class="stats__item stats__item-conversy">
+						<div class="stats__container-icon-text">
+							<svg class="stats__icon-ellipse stats__icon-ellipse-static-blue">
 								<use xlink:href="img/sprite.svg#empty-ellipse"></use>
 							</svg>
-							<span class="stats__text stats__text-label title__h4">Все</span>
+							<span class="stats__text stats__text-label title__h4">Приемы - Б24</span>
 						</div>
-						<span class="stats__text stats__text-persent stats__text-persent-all title__h4"></span>
-						<span class="stats__text stats__text-count stats__text-count-all title__h4"></span>
+						<span class="stats__text stats__text-persent stats__text-persent-b24 title__h4"></span>
+						<span class="stats__text stats__text-count stats__text-count-b24 title__h4"></span>
 					</li>
 				</ul>
 			</div>
-			<div class="stats__container-canvas-bar">
+			<div class="stats__container-canvas-round">
 				<canvas
-					id="statsBarChart-1c"
+					id="statsRadialConversy"
 					class="stats__canvas-bar stats__canvas-bar-1c stats__canvas-bar-visible"
-					width="95"
-					height="160"
+					width="150"
+					height="150"
 				></canvas>
-				<canvas
-					id="statsBarChart-bitrix"
-					class="stats__canvas-bar stats__canvas-bar-bitrix"
-					width="95"
-					height="160"
-				></canvas>
+				<div class="hero__container-tooltip stats__container-tooltip">
+					<div></div>
+				</div>
 			</div>
 		</div>
 		<div class="stats__block stats__block-cases">
@@ -97,7 +104,7 @@
 					name="endDateInput"
 					placeholder="Конечная дата"
 				/>
-				<button class="stats__button stats__button-history btn-reset">История</button>
+				<button class="stats__button stats__button-history btn-reset">Сформировать</button>
 			</div>
 			<input class="visually-hidden" type="file" name="fileInput" id="fileInput" />
 		</div>

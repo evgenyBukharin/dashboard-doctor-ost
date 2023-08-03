@@ -19,6 +19,7 @@ const heroItemInner = `
 	<span class="hero__text hero__text-persent title__h4"></span>
 	<span class="hero__text hero__text-count title__h4"></span>`;
 
+// данные которые используются для отрисовки диаграммы и списка
 const heroData1c = [
 	{ label: "1 прием", persentage: "18%", count: 50 },
 	{ label: "2 прием", persentage: "30%", count: 3 },
@@ -236,19 +237,21 @@ function externalTooltipHandler(context) {
 
 		const tableBody = document.createElement("div");
 		tableBody.classList = "hero__body-tooltip";
-		bodyLines.forEach((body, i) => {
+		bodyLines.forEach((body) => {
 			const tr = document.createElement("div");
 			tr.innerHTML = body + " пац.";
 
+			tableBody.appendChild(tr);
+		});
+
+		titleLines.forEach((title) => {
 			const td = document.createElement("div");
 
 			const foundedData = heroData1c.find((element) => {
-				element.label == tooltip.title[i];
-				return element;
+				return element.label == title;
 			});
 			td.innerHTML = foundedData.persentage;
 			tableBody.appendChild(td);
-			tableBody.appendChild(tr);
 		});
 
 		const tableRoot = tooltipEl.querySelector("div");

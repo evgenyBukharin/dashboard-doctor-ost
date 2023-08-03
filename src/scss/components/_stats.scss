@@ -1,11 +1,12 @@
 .stats {
 	&__container {
 		display: flex;
+		justify-content: space-between;
 		gap: 28px;
 		&-icon-text {
 			display: flex;
 			align-items: center;
-			max-width: 61px;
+			max-width: 98px;
 			width: 100%;
 			&-static {
 				max-width: 46px;
@@ -31,6 +32,10 @@
 			padding-left: 4px;
 			padding-right: 12px;
 			border-color: var(--black-color);
+		}
+		&-values {
+			display: flex;
+			align-items: center;
 		}
 	}
 	&__canvas {
@@ -71,7 +76,7 @@
 		&-contacts {
 			display: flex;
 			align-items: flex-start;
-			gap: 40px;
+			gap: 10px;
 		}
 		&-cases {
 			display: flex;
@@ -150,7 +155,7 @@
 		}
 	}
 	&__title {
-		margin-bottom: 30px;
+		margin-bottom: 14px;
 		white-space: nowrap;
 	}
 	&__list {
@@ -164,6 +169,13 @@
 		&:not(:last-child) {
 			border-bottom: 1px solid var(--orange-color);
 		}
+		&-conversy {
+			padding-right: 10px;
+			& .stats__text-count {
+				width: unset;
+				margin-left: 10px;
+			}
+		}
 	}
 	&__icon {
 		&-ellipse {
@@ -174,10 +186,6 @@
 			margin-right: 7px;
 			fill: var(--orange-color);
 			transition: fill 0.3s ease, stroke 0.3s ease;
-			&-all {
-				fill: transparent;
-				stroke: var(--blue-color);
-			}
 			&-blue {
 				fill: var(--blue-color);
 			}
@@ -189,12 +197,18 @@
 					fill: #299b9c !important;
 				}
 			}
+			&-transparent {
+				fill: transparent;
+				border: 1px solid black;
+				border-radius: 100%;
+			}
 		}
 	}
 	&__text {
 		font-size: 12px;
 		font-style: normal;
 		font-weight: 400;
+		white-space: nowrap;
 		&-persent {
 			max-width: 46px;
 			width: 100%;
@@ -209,11 +223,11 @@
 		}
 		&-static {
 			&-1c {
-				max-width: 100px;
+				max-width: 90px;
 				white-space: nowrap;
 			}
 			&-bitrix {
-				max-width: 100px;
+				max-width: 90px;
 				white-space: nowrap;
 			}
 		}
@@ -226,6 +240,12 @@
 					max-width: 31px;
 				}
 			}
+		}
+	}
+	& .hero__body-tooltip {
+		white-space: nowrap;
+		&::after {
+			display: none;
 		}
 	}
 }

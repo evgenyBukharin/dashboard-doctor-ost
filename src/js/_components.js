@@ -3,7 +3,7 @@ import "./components/hero-radial-1c";
 import "./components/hero-radial-bitrix";
 import "./components/switch";
 import "./components/theme-change";
-import "./components/bar-graph";
+import "./components/stats-radial-conversy";
 import "./components/stats-radial-graph";
 import "./components/contacts-handler";
 import "./components/file-input";

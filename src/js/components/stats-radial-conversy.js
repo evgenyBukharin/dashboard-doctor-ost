@@ -6,88 +6,34 @@ import DoughnutLabel from "chartjs-plugin-doughnutlabel-rebourne";
 Chart.register(ChartDataLabels);
 Chart.register(DoughnutLabel);
 
-const ctx = document.getElementById("myChartBitrix");
-export const heroListBitrix = document.querySelector(".hero__list-bitrix");
-
-const heroItemInner = `
-	<div class="hero__container-icon-text">
-		<svg class="hero__icon-ellipse">
-			<use xlink:href="img/sprite.svg#ellipse"></use>
-		</svg>
-		<span class="hero__text hero__text-label title__h4"></span>
-	</div>
-	<span class="hero__text hero__text-persent title__h4"></span>
-	<span class="hero__text hero__text-count title__h4"></span>`;
+const ctx = document.getElementById("statsRadialConversy");
 
 // данные которые используются для отрисовки диаграммы и списка
-const heroDataBitrix = [
-	{ label: "1 прием", persentage: "18%", count: 150 },
-	{ label: "2 приема", persentage: "30%", count: 6 },
-	{ label: "3 приема", persentage: "5%", count: 24 },
-	{ label: "4 приема", persentage: "11%", count: 112 },
-	{ label: "5 приемов", persentage: "20%", count: 43 },
-	{ label: "6 приемов", persentage: "12%", count: 35 },
-	{ label: "7 приемов", persentage: "4%", count: 32 },
-	{ label: "8 приемов", persentage: "5%", count: 98 },
-	{ label: "9 приемов", persentage: "12%", count: 32 },
-	{ label: "10+ приемов", persentage: "0.5%", count: 12 },
-];
+export const statsRadialDataConversy = {
+	count1c: 50,
+	bitrix: 79,
+};
+export const statsRadiaDataConversyEmpty = {
+	count: 22,
+	persent: 10,
+};
+const statsDataKeys = Object.keys(statsRadialDataConversy);
 
-const colors = [
-	"#E15335",
-	"#299B9C",
-	"#469C78",
-	"#52469C",
-	"#D31DA0",
-	"#00D7BD",
-	"#F66818",
-	"#298B9C",
-	"#CFD311",
-	"#FF002E",
-];
+const colors = ["#E15335", "#299B9C"];
 
-heroDataBitrix.forEach((row, idx) => {
-	// создаем новый айтем
-	let heroItem = document.createElement("li");
-	heroItem.classList.add("hero__item");
-	heroItem.innerHTML = heroItemInner;
-
-	// изменяем контент внутри
-	heroItem.querySelector(".hero__text-label").innerHTML = row.label;
-	heroItem.querySelector(".hero__text-persent").innerHTML = row.persentage;
-	heroItem.querySelector(".hero__text-count").innerHTML = row.count + " пац.";
-	heroItem.querySelector(".hero__icon-ellipse").style.fill = colors[idx];
-
-	// засовываем в лист
-	heroListBitrix.appendChild(heroItem);
-});
-
-const dataBitrix = {
-	labels: heroDataBitrix.map((row) => row.label),
+const data = {
+	labels: [""],
 	datasets: [
 		{
-			label: "",
-			data: heroDataBitrix.map((row) => row.count),
+			data: statsDataKeys.map((key) => statsRadialDataConversy[key]),
 			backgroundColor: colors,
-			datalabels: {
-				labels: {
-					index: {
-						color: "#1e1e1e",
-						font: {
-							size: 12,
-						},
-						align: "end",
-						anchor: "end",
-					},
-				},
-			},
 		},
 	],
 };
 
-const configBitrix = {
+const config = {
 	type: "doughnut",
-	data: dataBitrix,
+	data: data,
 	options: {
 		plugins: {
 			legend: {
@@ -102,71 +48,45 @@ const configBitrix = {
 				paddingPercentage: 5,
 				labels: [
 					{
-						text: "a",
+						text: "Всего",
 						font: {
-							size: 22,
-							weight: "400",
-						},
-						color: "transparent",
-					},
-					{
-						text: "Всего пациентов:",
-						font: {
-							size: 18,
+							size: 10,
 							weight: "400",
 						},
 					},
 					{
-						text: calcAllPatients(heroDataBitrix),
+						text: calcWholeSum(Object.values(statsRadialDataConversy)) + " лид",
 						font: {
-							size: 24,
-							weight: "500",
-						},
-					},
-					{
-						text: "a",
-						font: {
-							size: 18,
-							weight: "400",
-						},
-						color: "transparent",
-					},
-					{
-						text: "Стоимость одного лида:",
-						font: {
-							size: 18,
-							weight: "400",
-						},
-					},
-					{
-						text: 250,
-						font: {
-							size: 24,
-							weight: "500",
+							size: 10,
+							weight: "700",
 						},
 					},
 				],
 			},
-		},
-		cutout: "82%",
-		layout: {
-			padding: {
-				top: 35,
-				bottom: 35,
-				left: 35,
-				right: 35,
+			datalabels: {
+				display: false,
 			},
 		},
+		cutout: "75%",
+		layout: {
+			padding: {
+				top: 10,
+				bottom: 10,
+				left: 10,
+				right: 10,
+			},
+		},
+		rotation: -15,
 	},
 };
 
-const heroChartBitrix = new Chart(ctx, configBitrix);
+const statsRadialChart = new Chart(ctx, config);
 
 // считает общее количество пациентов из data
-function calcAllPatients(data) {
+export function calcWholeSum(data) {
 	let sum = null;
-	data.forEach((row) => {
-		sum += row.count;
+	data.forEach((value) => {
+		sum += value;
 	});
 	return sum;
 }
@@ -239,21 +159,15 @@ function externalTooltipHandler(context) {
 
 		const tableBody = document.createElement("div");
 		tableBody.classList = "hero__body-tooltip";
-		bodyLines.forEach((body) => {
+		bodyLines.forEach((body, i) => {
 			const tr = document.createElement("div");
 			tr.innerHTML = body + " пац.";
 
-			tableBody.appendChild(tr);
-		});
-
-		titleLines.forEach((title) => {
-			const td = document.createElement("div");
-
-			const foundedData = heroDataBitrix.find((element) => {
-				return element.label == title;
+			const foundedData = statsDataKeys.find((element) => {
+				element == tooltip.title[i];
+				return element;
 			});
-			td.innerHTML = foundedData.persentage;
-			tableBody.appendChild(td);
+			tableBody.appendChild(tr);
 		});
 
 		const tableRoot = tooltipEl.querySelector("div");
