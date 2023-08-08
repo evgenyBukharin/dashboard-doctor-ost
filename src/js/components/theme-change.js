@@ -6,6 +6,7 @@ import { heroListBitrix } from "./hero-radial-bitrix.js";
 const switchBtn = document.querySelector(".switch");
 const root = document.querySelector(":root");
 
+const heroTitle = document.querySelector(".hero__title");
 const statsCountStatic1c = document.querySelector(".stats__text-static-1c");
 const statsCountStaticBitrix = document.querySelector(".stats__text-static-bitrix");
 const statsPersentageStatic1c = document.querySelector(".stats__text-persentage-static-1c");
@@ -22,6 +23,8 @@ const statsConversyPersentb24 = document.querySelector(".stats__text-persent-b24
 const statsConversyCountb24 = document.querySelector(".stats__text-count-b24");
 const statsConversyPersentEmpty = document.querySelector(".stats__text-persent-empty");
 const statsConversyCountEpmty = document.querySelector(".stats__text-count-empty");
+const heroDate1c = document.querySelector(".hero__date-1c");
+const heroDateb24 = document.querySelector(".hero__date-b24");
 
 let currentTheme = "theme1c";
 const themes = {
@@ -66,14 +69,18 @@ function changeThemeContent() {
 	statsButtonsContainers.forEach((container) => {
 		container.classList.toggle("stats__block-buttons-visible");
 	});
+	heroDate1c.classList.toggle("hero__date-hidden");
+	heroDateb24.classList.toggle("hero__date-hidden");
 	changeText();
 }
 
 function changeText() {
 	if (currentTheme == "theme1c") {
+		heroTitle.innerHTML = "Конверсия приемов";
 		contactsLabel1c.innerHTML = "Б24";
 		contactsLabelBitrix.innerHTML = "1C";
 	} else {
+		heroTitle.innerHTML = "Конверсия лидов";
 		contactsLabelBitrix.innerHTML = "Б24";
 		contactsLabel1c.innerHTML = "1C";
 	}
