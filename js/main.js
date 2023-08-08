@@ -18,14 +18,16 @@ statsButtons.forEach(button => {
 /***/ 681:
 /***/ (() => {
 
-const startDateInput = document.getElementById("firstDateInput");
-const endDateInput = document.getElementById("endDateInput");
+const startDateInput = document.getElementById("firstDateInputB24");
+const endDateInput = document.getElementById("endDateInputB24");
+const startDateSpanB24 = document.querySelector(".hero__date-b24 .hero__date-text-start");
+const endDateSpanB24 = document.querySelector(".hero__date-b24 .hero__date-text-end");
 if (startDateInput !== null && endDateInput !== null) {
   startDateInput.addEventListener("change", () => {
-    console.log(startDateInput.value);
+    startDateSpanB24.innerHTML = startDateInput.value;
   });
   endDateInput.addEventListener("change", () => {
-    console.log(endDateInput.value);
+    endDateSpanB24.innerHTML = endDateInput.value;
   });
 }
 
@@ -905,7 +907,7 @@ return index;
 
 "use strict";
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.3.2
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -2992,7 +2994,7 @@ class LineController extends DatasetController {
         line._chart = this.chart;
         line._datasetIndex = this.index;
         line._decimated = !!_dataset._decimated;
-        line.points = points;
+        line.points = points.slice(Math.max(this._drawStart - 1, 0), this._drawStart + this._drawCount);
         const options = this.resolveDatasetElementOptions(mode);
         if (!this.options.showLine) {
             options.borderWidth = 0;
@@ -3372,6 +3374,9 @@ class ScatterController extends DatasetController {
             count = points.length;
         }
         if (this.options.showLine) {
+            if (!this.datasetElementType) {
+                this.addElements();
+            }
             const { dataset: line , _dataset  } = meta;
             line._chart = this.chart;
             line._datasetIndex = this.index;
@@ -3383,6 +3388,9 @@ class ScatterController extends DatasetController {
                 animated: !animationsDisabled,
                 options
             }, mode);
+        } else if (this.datasetElementType) {
+            delete meta.dataset;
+            this.datasetElementType = false;
         }
         this.updateElements(points, start, count, mode);
     }
@@ -6401,7 +6409,7 @@ function needContext(proxy, names) {
     return false;
 }
 
-var version = "4.3.0";
+var version = "4.3.2";
 
 const KNOWN_POSITIONS = [
     'top',
@@ -9365,7 +9373,7 @@ class Legend extends Element {
                 cursor.x += width + padding;
             } else if (typeof legendItem.text !== 'string') {
                 const fontLineHeight = labelFont.lineHeight;
-                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight);
+                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight) + padding;
             } else {
                 cursor.y += lineHeight;
             }
@@ -9479,7 +9487,7 @@ function calculateItemHeight(_itemHeight, legendItem, fontLineHeight) {
     return itemHeight;
 }
 function calculateLegendItemHeight(legendItem, fontLineHeight) {
-    const labelHeight = legendItem.text ? legendItem.text.length + 0.5 : 0;
+    const labelHeight = legendItem.text ? legendItem.text.length : 0;
     return fontLineHeight * labelHeight;
 }
 function isListened(type, opts) {
@@ -11783,7 +11791,9 @@ class RadialLinearScale extends LinearScaleBase {
                 ctx.fillRect(-width / 2 - padding.left, -offset - tickFont.size / 2 - padding.top, width + padding.width, tickFont.size + padding.height);
             }
             helpers_segment.renderText(ctx, tick.label, 0, -offset, tickFont, {
-                color: optsAtIndex.color
+                color: optsAtIndex.color,
+                strokeColor: optsAtIndex.textStrokeColor,
+                strokeWidth: optsAtIndex.textStrokeWidth
             });
         });
         ctx.restore();
@@ -12103,7 +12113,7 @@ class TimeScale extends Scale {
         if (time === max || options.bounds === 'ticks' || count === 1) {
             addTick(ticks, time, timestamps);
         }
-        return Object.keys(ticks).sort((a, b)=>a - b).map((x)=>+x);
+        return Object.keys(ticks).sort(sorter).map((x)=>+x);
     }
  getLabelForValue(value) {
         const adapter = this._adapter;
@@ -12286,6 +12296,18 @@ class TimeSeriesScale extends TimeScale {
         }
         return table;
     }
+ _generate() {
+        const min = this.min;
+        const max = this.max;
+        let timestamps = super.getDataTimestamps();
+        if (!timestamps.includes(min) || !timestamps.length) {
+            timestamps.splice(0, 0, min);
+        }
+        if (!timestamps.includes(max) || timestamps.length === 1) {
+            timestamps.push(max);
+        }
+        return timestamps.sort((a, b)=>a - b);
+    }
  _getTimestampsForTable() {
         let timestamps = this._cache.all || [];
         if (timestamps.length) {
@@ -12385,7 +12407,7 @@ exports.scales = scales;
 
 "use strict";
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.3.2
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -13015,7 +13037,7 @@ function fontString(pixelSize, fontStyle, fontFamily) {
         const { min , max , minDefined , maxDefined  } = iScale.getUserBounds();
         if (minDefined) {
             start = _limitValue(Math.min(// @ts-expect-error Need to type _parsed
-            _lookupByKey(_parsed, iScale.axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
+            _lookupByKey(_parsed, axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
             animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo), 0, pointCount - 1);
         }
         if (maxDefined) {
@@ -15262,7 +15284,7 @@ exports.valueOrDefault = valueOrDefault;
 
 "use strict";
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.3.2
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -16070,7 +16092,7 @@ function index_esm(input) {
 
 ;// CONCATENATED MODULE: ./node_modules/chart.js/dist/chunks/helpers.segment.js
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.3.2
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -16698,7 +16720,7 @@ function fontString(pixelSize, fontStyle, fontFamily) {
         const { min , max , minDefined , maxDefined  } = iScale.getUserBounds();
         if (minDefined) {
             start = _limitValue(Math.min(// @ts-expect-error Need to type _parsed
-            _lookupByKey(_parsed, iScale.axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
+            _lookupByKey(_parsed, axis, min).lo, // @ts-expect-error Need to fix types on _lookupByKey
             animationsDisabled ? pointCount : _lookupByKey(points, axis, iScale.getPixelForValue(min)).lo), 0, pointCount - 1);
         }
         if (maxDefined) {
@@ -18815,7 +18837,7 @@ function styleChanged(style, prevStyle) {
 
 ;// CONCATENATED MODULE: ./node_modules/chart.js/dist/chart.js
 /*!
- * Chart.js v4.3.0
+ * Chart.js v4.3.2
  * https://www.chartjs.org
  * (c) 2023 Chart.js Contributors
  * Released under the MIT License
@@ -20900,7 +20922,7 @@ class LineController extends DatasetController {
         line._chart = this.chart;
         line._datasetIndex = this.index;
         line._decimated = !!_dataset._decimated;
-        line.points = points;
+        line.points = points.slice(Math.max(this._drawStart - 1, 0), this._drawStart + this._drawCount);
         const options = this.resolveDatasetElementOptions(mode);
         if (!this.options.showLine) {
             options.borderWidth = 0;
@@ -21280,6 +21302,9 @@ class ScatterController extends DatasetController {
             count = points.length;
         }
         if (this.options.showLine) {
+            if (!this.datasetElementType) {
+                this.addElements();
+            }
             const { dataset: line , _dataset  } = meta;
             line._chart = this.chart;
             line._datasetIndex = this.index;
@@ -21291,6 +21316,9 @@ class ScatterController extends DatasetController {
                 animated: !animationsDisabled,
                 options
             }, mode);
+        } else if (this.datasetElementType) {
+            delete meta.dataset;
+            this.datasetElementType = false;
         }
         this.updateElements(points, start, count, mode);
     }
@@ -24309,7 +24337,7 @@ function needContext(proxy, names) {
     return false;
 }
 
-var version = "4.3.0";
+var version = "4.3.2";
 
 const KNOWN_POSITIONS = [
     'top',
@@ -27273,7 +27301,7 @@ class Legend extends Element {
                 cursor.x += width + padding;
             } else if (typeof legendItem.text !== 'string') {
                 const fontLineHeight = labelFont.lineHeight;
-                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight);
+                cursor.y += calculateLegendItemHeight(legendItem, fontLineHeight) + padding;
             } else {
                 cursor.y += lineHeight;
             }
@@ -27387,7 +27415,7 @@ function calculateItemHeight(_itemHeight, legendItem, fontLineHeight) {
     return itemHeight;
 }
 function calculateLegendItemHeight(legendItem, fontLineHeight) {
-    const labelHeight = legendItem.text ? legendItem.text.length + 0.5 : 0;
+    const labelHeight = legendItem.text ? legendItem.text.length : 0;
     return fontLineHeight * labelHeight;
 }
 function isListened(type, opts) {
@@ -29691,7 +29719,9 @@ class RadialLinearScale extends LinearScaleBase {
                 ctx.fillRect(-width / 2 - padding.left, -offset - tickFont.size / 2 - padding.top, width + padding.width, tickFont.size + padding.height);
             }
             renderText(ctx, tick.label, 0, -offset, tickFont, {
-                color: optsAtIndex.color
+                color: optsAtIndex.color,
+                strokeColor: optsAtIndex.textStrokeColor,
+                strokeWidth: optsAtIndex.textStrokeWidth
             });
         });
         ctx.restore();
@@ -30011,7 +30041,7 @@ class TimeScale extends Scale {
         if (time === max || options.bounds === 'ticks' || count === 1) {
             addTick(ticks, time, timestamps);
         }
-        return Object.keys(ticks).sort((a, b)=>a - b).map((x)=>+x);
+        return Object.keys(ticks).sort(sorter).map((x)=>+x);
     }
  getLabelForValue(value) {
         const adapter = this._adapter;
@@ -30193,6 +30223,18 @@ class TimeSeriesScale extends TimeScale {
             }
         }
         return table;
+    }
+ _generate() {
+        const min = this.min;
+        const max = this.max;
+        let timestamps = super.getDataTimestamps();
+        if (!timestamps.includes(min) || !timestamps.length) {
+            timestamps.splice(0, 0, min);
+        }
+        if (!timestamps.includes(max) || timestamps.length === 1) {
+            timestamps.push(max);
+        }
+        return timestamps.sort((a, b)=>a - b);
     }
  _getTimestampsForTable() {
         let timestamps = this._cache.all || [];
@@ -31622,6 +31664,8 @@ const heroItemInner = `
 	</div>
 	<span class="hero__text hero__text-persent title__h4"></span>
 	<span class="hero__text hero__text-count title__h4"></span>`;
+
+// данные которые используются для отрисовки диаграммы и списка
 const heroData1c = [{
   label: "1 прием",
   persentage: "18%",
@@ -31833,17 +31877,18 @@ function externalTooltipHandler(context) {
     });
     const tableBody = document.createElement("div");
     tableBody.classList = "hero__body-tooltip";
-    bodyLines.forEach((body, i) => {
+    bodyLines.forEach(body => {
       const tr = document.createElement("div");
       tr.innerHTML = body + " пац.";
+      tableBody.appendChild(tr);
+    });
+    titleLines.forEach(title => {
       const td = document.createElement("div");
       const foundedData = heroData1c.find(element => {
-        element.label == tooltip.title[i];
-        return element;
+        return element.label == title;
       });
       td.innerHTML = foundedData.persentage;
       tableBody.appendChild(td);
-      tableBody.appendChild(tr);
     });
     const tableRoot = tooltipEl.querySelector("div");
     tableRoot.classList = "hero__content-tooltip";
@@ -31894,7 +31939,7 @@ const heroDataBitrix = [{
   persentage: "18%",
   count: 150
 }, {
-  label: "2 прием",
+  label: "2 приема",
   persentage: "30%",
   count: 6
 }, {
@@ -32101,17 +32146,18 @@ function hero_radial_bitrix_externalTooltipHandler(context) {
     });
     const tableBody = document.createElement("div");
     tableBody.classList = "hero__body-tooltip";
-    bodyLines.forEach((body, i) => {
+    bodyLines.forEach(body => {
       const tr = document.createElement("div");
       tr.innerHTML = body + " пац.";
+      tableBody.appendChild(tr);
+    });
+    titleLines.forEach(title => {
       const td = document.createElement("div");
       const foundedData = heroDataBitrix.find(element => {
-        element.label == tooltip.title[i];
-        return element;
+        return element.label == title;
       });
       td.innerHTML = foundedData.persentage;
       tableBody.appendChild(td);
-      tableBody.appendChild(tr);
     });
     const tableRoot = tooltipEl.querySelector("div");
     tableRoot.classList = "hero__content-tooltip";
@@ -32137,220 +32183,178 @@ function hero_radial_bitrix_externalTooltipHandler(context) {
 }
 // EXTERNAL MODULE: ./src/js/components/switch.js
 var components_switch = __webpack_require__(316);
-;// CONCATENATED MODULE: ./src/js/components/bar-graph.js
+;// CONCATENATED MODULE: ./src/js/components/stats-radial-conversy.js
 
-const bar_graph_ctx = document.getElementById("statsBarChart-1c");
-const ctxBitrix = document.getElementById("statsBarChart-bitrix");
+
+
+
+// регистрация плагинов
+auto.register(chartjs_plugin_datalabels_esm_plugin);
+auto.register((chartjs_plugin_doughnutlabel_rebourne_default()));
+const stats_radial_conversy_ctx = document.getElementById("statsRadialConversy");
 
 // данные которые используются для отрисовки диаграммы и списка
-const graphData1c = {
-  "1c": 140,
-  all: 250
+const statsRadialDataConversy = {
+  count1c: 50,
+  bitrix: 79
 };
-const graphData1cKeys = Object.keys(graphData1c);
+const statsRadiaDataConversyEmpty = {
+  count: 22,
+  persent: 10
+};
+const statsDataKeys = Object.keys(statsRadialDataConversy);
+const stats_radial_conversy_colors = ["#E15335", "#299B9C"];
 const data = {
   labels: [""],
   datasets: [{
-    data: [graphData1c["1c"]],
-    backgroundColor: "#e15335",
-    barThickness: 47
-  }, {
-    data: [graphData1c.all - graphData1c["1c"]],
-    backgroundColor: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#299b9c",
-    barThickness: 47
+    data: statsDataKeys.map(key => statsRadialDataConversy[key]),
+    backgroundColor: stats_radial_conversy_colors
   }]
-};
-const barTextTooltip = {
-  id: "barTextTooltip",
-  afterDraw(chart) {
-    const {
-      ctx,
-      chartArea: {
-        top,
-        bottom,
-        left,
-        right,
-        width,
-        height
-      }
-    } = chart;
-    const barHeights = [];
-    chart.data.datasets.forEach((dataset, i) => {
-      chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
-        const {
-          x,
-          y
-        } = datapoint.tooltipPosition();
-        barHeights.push({
-          height: datapoint.height,
-          width: datapoint.width,
-          y: y
-        });
-      });
-    });
-    barHeights.forEach((obj, idx) => {
-      ctx.font = "12px Inter";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "black";
-      ctx.fillText(graphData1c[graphData1cKeys[idx]], obj.width + 10, obj.y + obj.height / 2);
-    });
-  }
 };
 const config = {
-  type: "bar",
+  type: "doughnut",
   data: data,
   options: {
-    scales: {
-      x: {
-        stacked: true,
-        grid: {
-          display: false
-        },
-        ticks: {
-          display: false
-        },
+    plugins: {
+      legend: {
         display: false
       },
-      y: {
-        stacked: true,
-        grid: {
-          display: false
-        },
-        ticks: {
-          display: false
-        },
-        display: false
-      }
-    },
-    plugins: {
-      legend: false,
       tooltip: {
-        enabled: false
+        enabled: false,
+        position: "nearest",
+        external: stats_radial_conversy_externalTooltipHandler
+      },
+      doughnutlabel: {
+        paddingPercentage: 5,
+        labels: [{
+          text: "Всего",
+          font: {
+            size: 10,
+            weight: "400"
+          }
+        }, {
+          text: calcWholeSum(Object.values(statsRadialDataConversy)) + " лид",
+          font: {
+            size: 10,
+            weight: "700"
+          }
+        }]
       },
       datalabels: {
         display: false
       }
     },
+    cutout: "75%",
     layout: {
       padding: {
-        right: 45
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10
       }
     },
-    hover: {
-      mode: null
-    }
-  },
-  plugins: [barTextTooltip]
-};
-const barChart1c = new auto(bar_graph_ctx, config);
-
-// второй скрытый график
-const graphDataBitrix = {
-  bitrix: 180,
-  all: 250
-};
-const graphDataBitrixKeys = Object.keys(graphDataBitrix);
-const bar_graph_dataBitrix = {
-  labels: [""],
-  datasets: [{
-    data: [graphDataBitrix.bitrix],
-    backgroundColor: "#299b9c",
-    barThickness: 47
-  }, {
-    data: [graphDataBitrix.all - graphDataBitrix.bitrix],
-    backgroundColor: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#e15335",
-    barThickness: 47
-  }]
-};
-const barTextTooltipBitrix = {
-  id: "barTextTooltipBitrix",
-  afterDraw(chart) {
-    const {
-      ctx,
-      chartArea: {
-        top,
-        bottom,
-        left,
-        right,
-        width,
-        height
-      }
-    } = chart;
-    const barHeights = [];
-    chart.data.datasets.forEach((dataset, i) => {
-      chart.getDatasetMeta(i).data.forEach((datapoint, index) => {
-        const {
-          x,
-          y
-        } = datapoint.tooltipPosition();
-        barHeights.push({
-          height: datapoint.height,
-          width: datapoint.width,
-          y: y
-        });
-      });
-    });
-    barHeights.forEach((obj, idx) => {
-      ctx.font = "12px Inter";
-      ctx.textBaseline = "middle";
-      ctx.fillStyle = "black";
-      ctx.fillText(graphDataBitrix[graphDataBitrixKeys[idx]], obj.width + 10, obj.y + obj.height / 2);
-    });
+    rotation: -15
   }
 };
-const bar_graph_configBitrix = {
-  type: "bar",
-  data: bar_graph_dataBitrix,
-  options: {
-    scales: {
-      x: {
-        stacked: true,
-        grid: {
-          display: false
-        },
-        ticks: {
-          display: false
-        },
-        display: false
-      },
-      y: {
-        stacked: true,
-        grid: {
-          display: false
-        },
-        ticks: {
-          display: false
-        },
-        display: false
-      }
-    },
-    plugins: {
-      legend: false,
-      tooltip: {
-        enabled: false
-      },
-      datalabels: {
-        display: false
-      }
-    },
-    layout: {
-      padding: {
-        right: 45
-      }
-    },
-    hover: {
-      mode: null
+const statsRadialChart = new auto(stats_radial_conversy_ctx, config);
+
+// считает общее количество пациентов из data
+function calcWholeSum(data) {
+  let sum = null;
+  data.forEach(value => {
+    sum += value;
+  });
+  return sum;
+}
+function stats_radial_conversy_getOrCreateTooltip(chart) {
+  let tooltipEl = stats_radial_conversy_ctx.parentNode.querySelector(".hero__container-tooltip");
+  if (!tooltipEl) {
+    tooltipEl = document.createElement("div");
+    tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+    tooltipEl.style.borderRadius = "100%";
+    tooltipEl.style.color = "white";
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.pointerEvents = "none";
+    tooltipEl.style.position = "absolute";
+    tooltipEl.style.transform = "translate(-50%, 0)";
+    tooltipEl.style.transition = "all .1s ease";
+    const table = document.createElement("div");
+    table.style.margin = "0px";
+    tooltipEl.appendChild(table);
+    chart.canvas.parentNode.appendChild(tooltipEl);
+  }
+  return tooltipEl;
+}
+function stats_radial_conversy_externalTooltipHandler(context) {
+  // Tooltip Element
+  const {
+    chart,
+    tooltip
+  } = context;
+  const tooltipEl = stats_radial_conversy_getOrCreateTooltip(chart);
+
+  // Hide if no tooltip
+  if (tooltip.opacity === 0) {
+    tooltipEl.style.opacity = 0;
+    return;
+  }
+
+  // Set Text
+  if (tooltip.body) {
+    const titleLines = tooltip.title || [];
+    const bodyLines = tooltip.body.map(b => b.lines);
+    const tableHead = document.createElement("div");
+    tableHead.classList = "hero__header-tooltip";
+    titleLines.forEach((title, i) => {
+      const colors = tooltip.labelColors[i];
+      const span = document.createElement("div");
+      span.classList = "hero__color-tooltip";
+      span.style.background = colors.backgroundColor;
+      span.style.borderColor = colors.borderColor;
+      const tr = document.createElement("div");
+      tr.style.borderWidth = 0;
+      const th = document.createElement("div");
+      th.style.borderWidth = 0;
+      const text = document.createTextNode(title);
+      tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+      th.appendChild(text);
+      tr.appendChild(th);
+      tableHead.appendChild(span);
+      tableHead.appendChild(tr);
+    });
+    const tableBody = document.createElement("div");
+    tableBody.classList = "hero__body-tooltip";
+    bodyLines.forEach((body, i) => {
+      const tr = document.createElement("div");
+      tr.innerHTML = body + " пац.";
+      const foundedData = statsDataKeys.find(element => {
+        element == tooltip.title[i];
+        return element;
+      });
+      tableBody.appendChild(tr);
+    });
+    const tableRoot = tooltipEl.querySelector("div");
+    tableRoot.classList = "hero__content-tooltip";
+
+    // Remove old children
+    while (tableRoot.firstChild) {
+      tableRoot.firstChild.remove();
     }
-  },
-  plugins: [barTextTooltipBitrix]
-};
-const barChartBitrinx = new auto(ctxBitrix, bar_graph_configBitrix);
+
+    // Add new children
+    tableRoot.appendChild(tableHead);
+    tableRoot.appendChild(tableBody);
+  }
+  const {
+    offsetLeft: positionX,
+    offsetTop: positionY
+  } = chart.canvas;
+
+  // Display, position, and set styles for font
+  tooltipEl.style.opacity = 1;
+  tooltipEl.style.left = positionX + tooltip.caretX + "px";
+  tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+}
 ;// CONCATENATED MODULE: ./src/js/components/stats-radial-graph.js
 
 
@@ -32366,12 +32370,12 @@ const statsRadialData = {
   count1c: 750000,
   bitrix: 1500000
 };
-const statsDataKeys = Object.keys(statsRadialData);
+const stats_radial_graph_statsDataKeys = Object.keys(statsRadialData);
 const stats_radial_graph_colors = ["#E15335", "#299B9C"];
 const stats_radial_graph_data = {
   labels: [""],
   datasets: [{
-    data: statsDataKeys.map(key => statsRadialData[key]),
+    data: stats_radial_graph_statsDataKeys.map(key => statsRadialData[key]),
     backgroundColor: stats_radial_graph_colors
   }]
 };
@@ -32393,14 +32397,14 @@ const stats_radial_graph_config = {
         labels: [{
           text: "Всего",
           font: {
-            size: 14,
+            size: 10,
             weight: "400"
           }
         }, {
-          text: calcWholeSum(Object.values(statsRadialData)) + " руб.",
+          text: format(new String(stats_radial_graph_calcWholeSum(Object.values(statsRadialData)))) + " ₽",
           font: {
-            size: 14,
-            weight: "500"
+            size: 10,
+            weight: "700"
           }
         }]
       },
@@ -32420,10 +32424,10 @@ const stats_radial_graph_config = {
     rotation: -15
   }
 };
-const statsRadialChart = new auto(stats_radial_graph_ctx, stats_radial_graph_config);
+const stats_radial_graph_statsRadialChart = new auto(stats_radial_graph_ctx, stats_radial_graph_config);
 
 // считает общее количество пациентов из data
-function calcWholeSum(data) {
+function stats_radial_graph_calcWholeSum(data) {
   let sum = null;
   data.forEach(value => {
     sum += value;
@@ -32491,7 +32495,7 @@ function stats_radial_graph_externalTooltipHandler(context) {
     bodyLines.forEach((body, i) => {
       const tr = document.createElement("div");
       tr.innerHTML = body + " руб.";
-      const foundedData = statsDataKeys.find(element => {
+      const foundedData = stats_radial_graph_statsDataKeys.find(element => {
         element == tooltip.title[i];
         return element;
       });
@@ -32519,6 +32523,15 @@ function stats_radial_graph_externalTooltipHandler(context) {
   tooltipEl.style.left = positionX + tooltip.caretX + "px";
   tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
 }
+function format(str) {
+  const s = str.length;
+  const chars = str.split("");
+  const strWithSpaces = chars.reduceRight((acc, char, i) => {
+    const spaceOrNothing = (s - i) % 3 === 0 ? " " : "";
+    return spaceOrNothing + char + acc;
+  }, "");
+  return strWithSpaces[0] === " " ? strWithSpaces.slice(1) : strWithSpaces;
+}
 ;// CONCATENATED MODULE: ./src/js/components/theme-change.js
 
 
@@ -32526,14 +32539,7 @@ function stats_radial_graph_externalTooltipHandler(context) {
 
 const switchBtn = document.querySelector(".switch");
 const root = document.querySelector(":root");
-const chart1c = document.getElementById("statsBarChart-1c");
-const chartBitrix = document.getElementById("statsBarChart-bitrix");
-const statsTitleFluid = document.querySelector(".stats__title-fluid");
-const statsContactsCount = document.querySelector(".stats__text-count");
-const statsContactsCountAll = document.querySelector(".stats__text-count-all ");
-const statsLabel = document.querySelector(".stats__text-label");
-const statsPersentage = document.querySelector(".stats__text-persent");
-const statsPersentageAll = document.querySelector(".stats__text-persent-all");
+const heroTitle = document.querySelector(".hero__title");
 const statsCountStatic1c = document.querySelector(".stats__text-static-1c");
 const statsCountStaticBitrix = document.querySelector(".stats__text-static-bitrix");
 const statsPersentageStatic1c = document.querySelector(".stats__text-persentage-static-1c");
@@ -32544,6 +32550,14 @@ const contactSliders = document.querySelectorAll(".contacts__container-slider");
 const statsButtonsContainers = document.querySelectorAll(".stats__block-buttons");
 const heroChart1cContainer = document.querySelector(".hero__container-graph-1c");
 const heroChartBitrixContainer = document.querySelector(".hero__container-graph-bitrix");
+const statsConversyPersent1c = document.querySelector(".stats__text-persent-1c");
+const statsConversyCount1c = document.querySelector(".stats__text-count-1c");
+const statsConversyPersentb24 = document.querySelector(".stats__text-persent-b24");
+const statsConversyCountb24 = document.querySelector(".stats__text-count-b24");
+const statsConversyPersentEmpty = document.querySelector(".stats__text-persent-empty");
+const statsConversyCountEpmty = document.querySelector(".stats__text-count-empty");
+const heroDate1c = document.querySelector(".hero__date-1c");
+const heroDateb24 = document.querySelector(".hero__date-b24");
 let currentTheme = "theme1c";
 const themes = {
   theme1c: {
@@ -32580,44 +32594,63 @@ function changeThemeContent() {
   heroChart1cContainer.classList.toggle("hero__container-graph-visible");
   heroListBitrix.classList.toggle("hero__list-visible");
   heroChartBitrixContainer.classList.toggle("hero__container-graph-visible");
-  chart1c.classList.toggle("stats__canvas-bar-visible");
-  chartBitrix.classList.toggle("stats__canvas-bar-visible");
   contactSliders.forEach(slider => {
     slider.classList.toggle("contacts__container-slider-visible");
   });
   statsButtonsContainers.forEach(container => {
     container.classList.toggle("stats__block-buttons-visible");
   });
+  heroDate1c.classList.toggle("hero__date-hidden");
+  heroDateb24.classList.toggle("hero__date-hidden");
   changeText();
 }
 function changeText() {
   if (currentTheme == "theme1c") {
-    statsTitleFluid.innerHTML = "Б24";
-    statsLabel.innerHTML = "Б24";
-    statsContactsCount.innerHTML = graphDataBitrix.bitrix + " чел.";
-    statsPersentage.innerHTML = Math.round(graphDataBitrix.bitrix * 100 / graphDataBitrix.all) + "%";
+    heroTitle.innerHTML = "Конверсия приемов";
     contactsLabel1c.innerHTML = "Б24";
     contactsLabelBitrix.innerHTML = "1C";
   } else {
-    statsTitleFluid.innerHTML = "1C";
-    statsLabel.innerHTML = "1C";
-    statsContactsCount.innerHTML = graphData1c[graphData1cKeys[0]] + " чел.";
-    statsPersentage.innerHTML = Math.round(graphData1c[graphData1cKeys[0]] * 100 / graphData1c.all) + "%";
+    heroTitle.innerHTML = "Конверсия лидов";
     contactsLabelBitrix.innerHTML = "Б24";
     contactsLabel1c.innerHTML = "1C";
   }
 }
-statsTitleFluid.innerHTML = "1C";
-statsLabel.innerHTML = "1C";
-statsContactsCount.innerHTML = graphData1c[graphData1cKeys[0]] + " чел.";
-statsPersentage.innerHTML = Math.round(graphData1c[graphData1cKeys[0]] * 100 / graphData1c.all) + "%";
-statsPersentageAll.innerHTML = "100%";
-statsContactsCountAll.innerHTML = graphData1c.all + " чел.";
+
+// конверсия лидов 1c
+const count1cPersentCoversy = Math.round(statsRadialDataConversy.count1c * 100 / stats_radial_graph_calcWholeSum(Object.values(statsRadialDataConversy)));
+statsConversyCount1c.innerHTML = statsRadialDataConversy.count1c + " пац.";
+statsConversyPersent1c.innerHTML = count1cPersentCoversy + "%";
+
+// конверсия лидов b24
+statsConversyCountb24.innerHTML = statsRadialDataConversy.bitrix + " пац.";
+statsConversyPersentb24.innerHTML = 100 - count1cPersentCoversy + "%";
+
+// общая сумма сделок 1с
+const count1cPersent = Math.round(statsRadialData.count1c * 100 / stats_radial_graph_calcWholeSum(Object.values(statsRadialData)));
 statsCountStatic1c.innerHTML = statsRadialData.count1c + " руб.";
-statsCountStaticBitrix.innerHTML = statsRadialData.bitrix + " руб.";
-const count1cPersent = Math.round(statsRadialData.count1c * 100 / calcWholeSum(Object.values(statsRadialData)));
 statsPersentageStatic1c.innerHTML = count1cPersent + "%";
+
+// общая сумма сделок b24
+statsCountStaticBitrix.innerHTML = statsRadialData.bitrix + " руб.";
 statsPersentageStaticBitrix.innerHTML = 100 - count1cPersent + "%";
+
+// без приема
+statsConversyCountEpmty.innerHTML = statsRadiaDataConversyEmpty.count + " " + declOfNum(statsRadiaDataConversyEmpty.count, ["лид", "лида", "лидов"]);
+statsConversyPersentEmpty.innerHTML = statsRadiaDataConversyEmpty.persent + "%";
+function declOfNum(n, text_forms) {
+  n = Math.abs(n) % 100;
+  var n1 = n % 10;
+  if (n > 10 && n < 20) {
+    return text_forms[2];
+  }
+  if (n1 > 1 && n1 < 5) {
+    return text_forms[1];
+  }
+  if (n1 == 1) {
+    return text_forms[0];
+  }
+  return text_forms[2];
+}
 ;// CONCATENATED MODULE: ./node_modules/ssr-window/ssr-window.esm.js
 /**
  * SSR Window 4.0.2
@@ -41109,7 +41142,7 @@ function Controller({
         c.transitionStart();
 
         if (c.params.autoHeight) {
-          nextTick(() => {
+          utils_nextTick(() => {
             c.updateAutoHeight();
           });
         }
@@ -43109,9 +43142,923 @@ function EffectCards({
 
 
 
-;// CONCATENATED MODULE: ./src/js/components/contacts-handler.js
+;// CONCATENATED MODULE: ./src/js/components/contacts-slider-1c.js
 
-core.use([Pagination, Navigation]);
+core.use([Pagination, Navigation, Controller]);
+const contacts_slider_1c_data1c = [{
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}, {
+  name: "Егоров Лев Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 1
+}, {
+  name: "Евдокимов Максим Викторович",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Чеботарев Максим Владимирович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Калмыков Артём Михайлович",
+  phone: "+7 (908) 056 78 22",
+  deals: 9
+}, {
+  name: "Дмитриев Никита Александрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 14
+}, {
+  name: "Макаров Лев Леонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 22
+}, {
+  name: "Казакова Александра Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 4
+}, {
+  name: "Ильина Алиса Егоровна",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Князев Матвей Васильевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 100
+}, {
+  name: "Орлова Полина Степановна",
+  phone: "+7 (908) 056 78 22",
+  deals: 8
+}, {
+  name: "Сергеева Серафима Владимировна",
+  phone: "+7 (908) 056 78 22",
+  deals: 5
+}, {
+  name: "Юдин Тимофей Петрович",
+  phone: "+7 (908) 056 78 22",
+  deals: 6
+}, {
+  name: "Прокофьев Дмитрий Платонович",
+  phone: "+7 (908) 056 78 22",
+  deals: 3
+}, {
+  name: "Комаров Лев Дмитриевич",
+  phone: "+7 (908) 056 78 22",
+  deals: 0
+}, {
+  name: "Петров Валерий Александрович",
+  phone: "+79080567822",
+  deals: 5
+}, {
+  name: "Максимов Эмир Андреевич",
+  phone: "89060230760",
+  deals: 12
+}];
+const contactsValueSpan = document.querySelector(".contacts__value-1c");
+contactsValueSpan.innerHTML = contacts_slider_1c_data1c.length;
+
+// верстка внутреннего элемента списка
+const contactsItemInner = `
+		<span class="contacts__name"></span>
+		<span class="contacts__phone" data-mask='XX (XXX) XXX XX XX'></span>
+		<span class="contacts__deals"></span>
+	`;
+const list = document.querySelector(`.contacts__list-1c`);
+const formattedData = [];
+const chunkSize = 10;
+for (let i = 0; i < contacts_slider_1c_data1c.length; i += chunkSize) {
+  const chunk = contacts_slider_1c_data1c.slice(i, i + chunkSize);
+  formattedData.push(chunk);
+}
+formattedData.forEach(array => {
+  // создаем новый слайд
+  let contactsSlide = document.createElement("div");
+  contactsSlide.classList = `swiper-slide swiper-slide-1c`;
+  array.forEach(row => {
+    // создем новый айтем
+    let contactsItem = document.createElement("div");
+    contactsItem.classList = "contacts__item title title__h4";
+    contactsItem.innerHTML = contactsItemInner;
+
+    // изменяем контент внутри
+    const phone = contactsItem.querySelector(".contacts__phone");
+    contactsItem.querySelector(".contacts__name").innerHTML = row.name;
+    phone.innerHTML = formatByMask(phone.getAttribute("data-mask"), row.phone);
+    contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
+
+    // засовываем в лист
+    contactsSlide.appendChild(contactsItem);
+  });
+  list.appendChild(contactsSlide);
+});
+const swiperThumbs1c = new core(document.querySelector(`.swiper-thumbs-1c`), {
+  slidesPerView: 7,
+  speed: 500,
+  navigation: {
+    nextEl: ".contacts__button-next-1c",
+    prevEl: ".contacts__button-prev-1c"
+  }
+});
+const slider1c = new core(document.querySelector(`.contacts__container-slider-1c`), {
+  slidesPerView: 1,
+  spaceBetween: 30,
+  slideClass: `swiper-slide-1c`,
+  speed: 500,
+  pagination: {
+    el: ".contacts__pagination-1c",
+    clickable: true,
+    bulletActiveClass: "contacts__bullet-active",
+    renderBullet: function (index, className) {
+      return `<span class="swiper-slide contacts__bullet ${className}">${index + 1}</span>`;
+    }
+  },
+  navigation: {
+    nextEl: ".contacts__button-next-1c",
+    prevEl: ".contacts__button-prev-1c"
+  },
+  controller: {
+    by: "container",
+    control: swiperThumbs1c
+  }
+});
+function formatByMask(mask, value) {
+  if (value.length >= 13) {
+    return value;
+  }
+  if (value.length < 12) {
+    let maskArray = mask.split("");
+    maskArray.shift();
+    mask = maskArray.join("");
+  }
+  let formattedValue = mask;
+  const maskCharCount = [...mask].reduce((result, chr) => {
+    if (chr === "X") result++;
+    return result;
+  }, 0);
+  for (let i = 0; i < maskCharCount; i++) {
+    if (value[i]) formattedValue = formattedValue.replace("X", value[i]);
+  }
+  return formattedValue;
+}
+;// CONCATENATED MODULE: ./src/js/components/contacts-slider-bitrix.js
+
+core.use([Pagination, Navigation, Controller]);
 
 // данные для отрисовки при теме bitrix
 const bitrixData = [{
@@ -43435,199 +44382,74 @@ const bitrixData = [{
   phone: "+7 (908) 056 78 22",
   deals: 0
 }];
-const contacts_handler_data1c = [{
-  name: "Петров Валерий Александрович",
-  phone: "+79080567822",
-  deals: 5
-}, {
-  name: "Максимов Эмир Андреевич",
-  phone: "89060230760",
-  deals: 12
-}, {
-  name: "Егоров Лев Александрович",
-  phone: "+7 (908) 056 78 22",
-  deals: 1
-}, {
-  name: "Евдокимов Максим Викторович",
-  phone: "+7 (908) 056 78 22",
-  deals: 5
-}, {
-  name: "Чеботарев Максим Владимирович",
-  phone: "+7 (908) 056 78 22",
-  deals: 6
-}, {
-  name: "Калмыков Артём Михайлович",
-  phone: "+7 (908) 056 78 22",
-  deals: 9
-}, {
-  name: "Дмитриев Никита Александрович",
-  phone: "+7 (908) 056 78 22",
-  deals: 14
-}, {
-  name: "Макаров Лев Леонович",
-  phone: "+7 (908) 056 78 22",
-  deals: 22
-}, {
-  name: "Казакова Александра Егоровна",
-  phone: "+7 (908) 056 78 22",
-  deals: 4
-}, {
-  name: "Ильина Алиса Егоровна",
-  phone: "+7 (908) 056 78 22",
-  deals: 3
-}, {
-  name: "Князев Матвей Васильевич",
-  phone: "+7 (908) 056 78 22",
-  deals: 100
-}, {
-  name: "Орлова Полина Степановна",
-  phone: "+7 (908) 056 78 22",
-  deals: 8
-}, {
-  name: "Сергеева Серафима Владимировна",
-  phone: "+7 (908) 056 78 22",
-  deals: 5
-}, {
-  name: "Юдин Тимофей Петрович",
-  phone: "+7 (908) 056 78 22",
-  deals: 6
-}, {
-  name: "Прокофьев Дмитрий Платонович",
-  phone: "+7 (908) 056 78 22",
-  deals: 3
-}, {
-  name: "Комаров Лев Дмитриевич",
-  phone: "+7 (908) 056 78 22",
-  deals: 0
-}, {
-  name: "Петров Валерий Александрович",
-  phone: "+79080567822",
-  deals: 5
-}, {
-  name: "Максимов Эмир Андреевич",
-  phone: "89060230760",
-  deals: 12
-}, {
-  name: "Егоров Лев Александрович",
-  phone: "+7 (908) 056 78 22",
-  deals: 1
-}, {
-  name: "Евдокимов Максим Викторович",
-  phone: "+7 (908) 056 78 22",
-  deals: 5
-}, {
-  name: "Чеботарев Максим Владимирович",
-  phone: "+7 (908) 056 78 22",
-  deals: 6
-}, {
-  name: "Калмыков Артём Михайлович",
-  phone: "+7 (908) 056 78 22",
-  deals: 9
-}, {
-  name: "Дмитриев Никита Александрович",
-  phone: "+7 (908) 056 78 22",
-  deals: 14
-}, {
-  name: "Макаров Лев Леонович",
-  phone: "+7 (908) 056 78 22",
-  deals: 22
-}, {
-  name: "Казакова Александра Егоровна",
-  phone: "+7 (908) 056 78 22",
-  deals: 4
-}, {
-  name: "Ильина Алиса Егоровна",
-  phone: "+7 (908) 056 78 22",
-  deals: 3
-}, {
-  name: "Князев Матвей Васильевич",
-  phone: "+7 (908) 056 78 22",
-  deals: 100
-}, {
-  name: "Орлова Полина Степановна",
-  phone: "+7 (908) 056 78 22",
-  deals: 8
-}, {
-  name: "Сергеева Серафима Владимировна",
-  phone: "+7 (908) 056 78 22",
-  deals: 5
-}, {
-  name: "Юдин Тимофей Петрович",
-  phone: "+7 (908) 056 78 22",
-  deals: 6
-}, {
-  name: "Прокофьев Дмитрий Платонович",
-  phone: "+7 (908) 056 78 22",
-  deals: 3
-}, {
-  name: "Комаров Лев Дмитриевич",
-  phone: "+7 (908) 056 78 22",
-  deals: 0
-}, {
-  name: "Петров Валерий Александрович",
-  phone: "+79080567822",
-  deals: 5
-}, {
-  name: "Максимов Эмир Андреевич",
-  phone: "89060230760",
-  deals: 12
-}];
+const contacts_slider_bitrix_contactsValueSpan = document.querySelector(".contacts__value-bitrix");
+contacts_slider_bitrix_contactsValueSpan.innerHTML = bitrixData.length;
 
 // верстка внутреннего элемента списка
-const contactsItemInner = `
+const contacts_slider_bitrix_contactsItemInner = `
 		<span class="contacts__name"></span>
 		<span class="contacts__phone" data-mask='XX (XXX) XXX XX XX'></span>
 		<span class="contacts__deals"></span>
 	`;
-function makeSlider(data, classModifier) {
-  const list = document.querySelector(`.contacts__list-${classModifier}`);
-  const formattedData = [];
-  const chunkSize = 10;
-  for (let i = 0; i < data.length; i += chunkSize) {
-    const chunk = data.slice(i, i + chunkSize);
-    formattedData.push(chunk);
-  }
-  formattedData.forEach(array => {
-    // создаем новый слайд
-    let contactsSlide = document.createElement("div");
-    contactsSlide.classList = `swiper-slide swiper-slide-${classModifier}`;
-    array.forEach(row => {
-      // создем новый айтем
-      let contactsItem = document.createElement("div");
-      contactsItem.classList = "contacts__item title title__h4";
-      contactsItem.innerHTML = contactsItemInner;
-
-      // изменяем контент внутри
-      const phone = contactsItem.querySelector(".contacts__phone");
-      contactsItem.querySelector(".contacts__name").innerHTML = row.name;
-      phone.innerHTML = formatByMask(phone.getAttribute("data-mask"), row.phone);
-      contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
-
-      // засовываем в лист
-      contactsSlide.appendChild(contactsItem);
-    });
-    list.appendChild(contactsSlide);
-  });
-  new core(document.querySelector(`.contacts__container-slider-${classModifier}`), {
-    slidesPerView: 1,
-    spaceBetween: 30,
-    slideClass: `swiper-slide-${classModifier}`,
-    speed: 500,
-    pagination: {
-      el: ".contacts__pagination",
-      clickable: true,
-      bulletActiveClass: "contacts__bullet-active",
-      renderBullet: function (index, className) {
-        return `<span class="contacts__bullet ${className}">${index + 1}</span>`;
-      }
-    },
-    navigation: {
-      nextEl: ".contacts__button-next",
-      prevEl: ".contacts__button-prev"
-    }
-  });
+const contacts_slider_bitrix_list = document.querySelector(`.contacts__list-bitrix`);
+const contacts_slider_bitrix_formattedData = [];
+const contacts_slider_bitrix_chunkSize = 10;
+for (let i = 0; i < bitrixData.length; i += contacts_slider_bitrix_chunkSize) {
+  const chunk = bitrixData.slice(i, i + contacts_slider_bitrix_chunkSize);
+  contacts_slider_bitrix_formattedData.push(chunk);
 }
-function formatByMask(mask, value) {
+contacts_slider_bitrix_formattedData.forEach(array => {
+  // создаем новый слайд
+  let contactsSlide = document.createElement("div");
+  contactsSlide.classList = `swiper-slide swiper-slide-bitrix`;
+  array.forEach(row => {
+    // создем новый айтем
+    let contactsItem = document.createElement("div");
+    contactsItem.classList = "contacts__item title title__h4";
+    contactsItem.innerHTML = contacts_slider_bitrix_contactsItemInner;
+
+    // изменяем контент внутри
+    const phone = contactsItem.querySelector(".contacts__phone");
+    contactsItem.querySelector(".contacts__name").innerHTML = row.name;
+    phone.innerHTML = contacts_slider_bitrix_formatByMask(phone.getAttribute("data-mask"), row.phone);
+    contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
+
+    // засовываем в лист
+    contactsSlide.appendChild(contactsItem);
+  });
+  contacts_slider_bitrix_list.appendChild(contactsSlide);
+});
+const swiperThumbsBitrix = new core(document.querySelector(`.swiper-thumbs-bitrix`), {
+  slidesPerView: 7,
+  speed: 500,
+  navigation: {
+    nextEl: ".contacts__button-next-bitrix",
+    prevEl: ".contacts__button-prev-bitrix"
+  }
+});
+const sliderBitrix = new core(document.querySelector(`.contacts__container-slider-bitrix`), {
+  slidesPerView: 1,
+  spaceBetween: 30,
+  slideClass: `swiper-slide-bitrix`,
+  speed: 500,
+  pagination: {
+    el: ".contacts__pagination-bitrix",
+    clickable: true,
+    bulletActiveClass: "contacts__bullet-active",
+    renderBullet: function (index, className) {
+      return `<span class="swiper-slide contacts__bullet ${className}">${index + 1}</span>`;
+    }
+  },
+  navigation: {
+    nextEl: ".contacts__button-next-bitrix",
+    prevEl: ".contacts__button-prev-bitrix"
+  },
+  controller: {
+    by: "container",
+    control: swiperThumbsBitrix
+  }
+});
+function contacts_slider_bitrix_formatByMask(mask, value) {
   if (value.length >= 13) {
     return value;
   }
@@ -43646,8 +44468,6 @@ function formatByMask(mask, value) {
   }
   return formattedValue;
 }
-makeSlider(bitrixData, "bitrix");
-makeSlider(contacts_handler_data1c, "1c");
 // EXTERNAL MODULE: ./src/js/components/file-input.js
 var file_input = __webpack_require__(742);
 // EXTERNAL MODULE: ./src/js/components/data-buttons.js
@@ -43656,6 +44476,7 @@ var data_buttons = __webpack_require__(681);
 var buttons_height = __webpack_require__(12);
 ;// CONCATENATED MODULE: ./src/js/_components.js
 // import "./components/get-graphs-data";
+
 
 
 
