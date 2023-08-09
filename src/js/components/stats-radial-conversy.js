@@ -1,192 +1,230 @@
 import Chart from "chart.js/auto";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import DoughnutLabel from "chartjs-plugin-doughnutlabel-rebourne";
+import declOfNum from "../_functions";
 
 // регистрация плагинов
 Chart.register(ChartDataLabels);
 Chart.register(DoughnutLabel);
 
-const ctx = document.getElementById("statsRadialConversy");
+export function drawStatsRadialConversy(dataConversy, dataConversyEmpty) {
+	const ctx = document.getElementById("statsRadialConversy");
 
-// данные которые используются для отрисовки диаграммы и списка
-export const statsRadialDataConversy = {
-	count1c: 50,
-	bitrix: 79,
-};
-export const statsRadiaDataConversyEmpty = {
-	count: 22,
-	persent: 10,
-};
-const statsDataKeys = Object.keys(statsRadialDataConversy);
+	// данные которые используются для отрисовки диаграммы и списка
+	const statsRadialDataConversy = dataConversy;
+	const statsRadiaDataConversyEmpty = dataConversyEmpty;
 
-const colors = ["#E15335", "#299B9C"];
+	const statsDataKeys = Object.keys(statsRadialDataConversy);
 
-const data = {
-	labels: [""],
-	datasets: [
-		{
-			data: statsDataKeys.map((key) => statsRadialDataConversy[key]),
-			backgroundColor: colors,
-		},
-	],
-};
+	const colors = ["#E15335", "#299B9C"];
 
-const config = {
-	type: "doughnut",
-	data: data,
-	options: {
-		plugins: {
-			legend: {
-				display: false,
+	const data = {
+		labels: [""],
+		datasets: [
+			{
+				data: statsDataKeys.map((key) => statsRadialDataConversy[key]),
+				backgroundColor: colors,
 			},
-			tooltip: {
-				enabled: false,
-				position: "nearest",
-				external: externalTooltipHandler,
-			},
-			doughnutlabel: {
-				paddingPercentage: 5,
-				labels: [
-					{
-						text: "Всего",
-						font: {
-							size: 10,
-							weight: "400",
+		],
+	};
+
+	const config = {
+		type: "doughnut",
+		data: data,
+		options: {
+			plugins: {
+				legend: {
+					display: false,
+				},
+				tooltip: {
+					enabled: false,
+					position: "nearest",
+					external: externalTooltipHandler,
+				},
+				doughnutlabel: {
+					paddingPercentage: 5,
+					labels: [
+						{
+							text: "Всего",
+							font: {
+								size: 10,
+								weight: "400",
+							},
 						},
-					},
-					{
-						text: calcWholeSum(Object.values(statsRadialDataConversy)) + " лид",
-						font: {
-							size: 10,
-							weight: "700",
+						{
+							text: calcWholeSum(Object.values(statsRadialDataConversy)) + " лид",
+							font: {
+								size: 10,
+								weight: "700",
+							},
 						},
-					},
-				],
+					],
+				},
+				datalabels: {
+					display: false,
+				},
 			},
-			datalabels: {
-				display: false,
+			cutout: "75%",
+			layout: {
+				padding: {
+					top: 10,
+					bottom: 10,
+					left: 10,
+					right: 10,
+				},
 			},
+			rotation: -15,
 		},
-		cutout: "75%",
-		layout: {
-			padding: {
-				top: 10,
-				bottom: 10,
-				left: 10,
-				right: 10,
-			},
-		},
-		rotation: -15,
-	},
-};
+	};
 
-const statsRadialChart = new Chart(ctx, config);
+	const statsConversyPersent1c = document.querySelector(".stats__text-persent-1c");
+	const statsConversyCount1c = document.querySelector(".stats__text-count-1c");
+	const statsConversyPersentb24 = document.querySelector(".stats__text-persent-b24");
+	const statsConversyCountb24 = document.querySelector(".stats__text-count-b24");
+	const statsConversyPersentEmpty = document.querySelector(".stats__text-persent-empty");
+	const statsConversyCountEpmty = document.querySelector(".stats__text-count-empty");
 
-// считает общее количество пациентов из data
-export function calcWholeSum(data) {
-	let sum = null;
-	data.forEach((value) => {
-		sum += value;
-	});
-	return sum;
-}
+	// конверсия лидов 1c
+	const count1cPersentCoversy = Math.round(
+		(statsRadialDataConversy.count1c * 100) / calcWholeSum(Object.values(statsRadialDataConversy))
+	);
+	statsConversyCount1c.innerHTML = statsRadialDataConversy.count1c + " пац.";
+	statsConversyPersent1c.innerHTML = count1cPersentCoversy + "%";
 
-function getOrCreateTooltip(chart) {
-	let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
+	// конверсия лидов b24
+	statsConversyCountb24.innerHTML = statsRadialDataConversy.bitrix + " пац.";
+	statsConversyPersentb24.innerHTML = 100 - count1cPersentCoversy + "%";
 
-	if (!tooltipEl) {
-		tooltipEl = document.createElement("div");
-		tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
-		tooltipEl.style.borderRadius = "100%";
-		tooltipEl.style.color = "white";
-		tooltipEl.style.opacity = 1;
-		tooltipEl.style.pointerEvents = "none";
-		tooltipEl.style.position = "absolute";
-		tooltipEl.style.transform = "translate(-50%, 0)";
-		tooltipEl.style.transition = "all .1s ease";
+	// без приема
+	statsConversyCountEpmty.innerHTML =
+		statsRadiaDataConversyEmpty.count +
+		" " +
+		declOfNum(statsRadiaDataConversyEmpty.count, ["лид", "лида", "лидов"]);
+	statsConversyPersentEmpty.innerHTML = statsRadiaDataConversyEmpty.persent + "%";
 
-		const table = document.createElement("div");
-		table.style.margin = "0px";
+	const statsRadialChart = new Chart(ctx, config);
 
-		tooltipEl.appendChild(table);
-		chart.canvas.parentNode.appendChild(tooltipEl);
+	// считает общее количество пациентов из data
+	function calcWholeSum(data) {
+		let sum = null;
+		data.forEach((value) => {
+			sum += value;
+		});
+		return sum;
 	}
 
-	return tooltipEl;
-}
+	function getOrCreateTooltip(chart) {
+		let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
 
-function externalTooltipHandler(context) {
-	// Tooltip Element
-	const { chart, tooltip } = context;
-	const tooltipEl = getOrCreateTooltip(chart);
+		if (!tooltipEl) {
+			tooltipEl = document.createElement("div");
+			tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+			tooltipEl.style.borderRadius = "100%";
+			tooltipEl.style.color = "white";
+			tooltipEl.style.opacity = 1;
+			tooltipEl.style.pointerEvents = "none";
+			tooltipEl.style.position = "absolute";
+			tooltipEl.style.transform = "translate(-50%, 0)";
+			tooltipEl.style.transition = "all .1s ease";
 
-	// Hide if no tooltip
-	if (tooltip.opacity === 0) {
-		tooltipEl.style.opacity = 0;
-		return;
-	}
+			const table = document.createElement("div");
+			table.style.margin = "0px";
 
-	// Set Text
-	if (tooltip.body) {
-		const titleLines = tooltip.title || [];
-		const bodyLines = tooltip.body.map((b) => b.lines);
-
-		const tableHead = document.createElement("div");
-		tableHead.classList = "hero__header-tooltip";
-
-		titleLines.forEach((title, i) => {
-			const colors = tooltip.labelColors[i];
-
-			const span = document.createElement("div");
-			span.classList = "hero__color-tooltip";
-			span.style.background = colors.backgroundColor;
-			span.style.borderColor = colors.borderColor;
-
-			const tr = document.createElement("div");
-			tr.style.borderWidth = 0;
-
-			const th = document.createElement("div");
-			th.style.borderWidth = 0;
-			const text = document.createTextNode(title);
-
-			tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
-
-			th.appendChild(text);
-			tr.appendChild(th);
-			tableHead.appendChild(span);
-			tableHead.appendChild(tr);
-		});
-
-		const tableBody = document.createElement("div");
-		tableBody.classList = "hero__body-tooltip";
-		bodyLines.forEach((body, i) => {
-			const tr = document.createElement("div");
-			tr.innerHTML = body + " пац.";
-
-			const foundedData = statsDataKeys.find((element) => {
-				element == tooltip.title[i];
-				return element;
-			});
-			tableBody.appendChild(tr);
-		});
-
-		const tableRoot = tooltipEl.querySelector("div");
-		tableRoot.classList = "hero__content-tooltip";
-
-		// Remove old children
-		while (tableRoot.firstChild) {
-			tableRoot.firstChild.remove();
+			tooltipEl.appendChild(table);
+			chart.canvas.parentNode.appendChild(tooltipEl);
 		}
 
-		// Add new children
-		tableRoot.appendChild(tableHead);
-		tableRoot.appendChild(tableBody);
+		return tooltipEl;
 	}
 
-	const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+	function externalTooltipHandler(context) {
+		// Tooltip Element
+		const { chart, tooltip } = context;
+		const tooltipEl = getOrCreateTooltip(chart);
 
-	// Display, position, and set styles for font
-	tooltipEl.style.opacity = 1;
-	tooltipEl.style.left = positionX + tooltip.caretX + "px";
-	tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+		// Hide if no tooltip
+		if (tooltip.opacity === 0) {
+			tooltipEl.style.opacity = 0;
+			return;
+		}
+
+		// Set Text
+		if (tooltip.body) {
+			const titleLines = tooltip.title || [];
+			const bodyLines = tooltip.body.map((b) => b.lines);
+
+			const tableHead = document.createElement("div");
+			tableHead.classList = "hero__header-tooltip";
+
+			titleLines.forEach((title, i) => {
+				const colors = tooltip.labelColors[i];
+
+				const span = document.createElement("div");
+				span.classList = "hero__color-tooltip";
+				span.style.background = colors.backgroundColor;
+				span.style.borderColor = colors.borderColor;
+
+				const tr = document.createElement("div");
+				tr.style.borderWidth = 0;
+
+				const th = document.createElement("div");
+				th.style.borderWidth = 0;
+				const text = document.createTextNode(title);
+
+				tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+
+				th.appendChild(text);
+				tr.appendChild(th);
+				tableHead.appendChild(span);
+				tableHead.appendChild(tr);
+			});
+
+			const tableBody = document.createElement("div");
+			tableBody.classList = "hero__body-tooltip";
+			bodyLines.forEach((body, i) => {
+				const tr = document.createElement("div");
+				tr.innerHTML = body + " пац.";
+
+				const foundedData = statsDataKeys.find((element) => {
+					element == tooltip.title[i];
+					return element;
+				});
+				tableBody.appendChild(tr);
+			});
+
+			const tableRoot = tooltipEl.querySelector("div");
+			tableRoot.classList = "hero__content-tooltip";
+
+			// Remove old children
+			while (tableRoot.firstChild) {
+				tableRoot.firstChild.remove();
+			}
+
+			// Add new children
+			tableRoot.appendChild(tableHead);
+			tableRoot.appendChild(tableBody);
+		}
+
+		const { offsetLeft: positionX, offsetTop: positionY } = chart.canvas;
+
+		// Display, position, and set styles for font
+		tooltipEl.style.opacity = 1;
+		tooltipEl.style.left = positionX + tooltip.caretX + "px";
+		tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+	}
+
+	function declOfNum(n, text_forms) {
+		n = Math.abs(n) % 100;
+		var n1 = n % 10;
+		if (n > 10 && n < 20) {
+			return text_forms[2];
+		}
+		if (n1 > 1 && n1 < 5) {
+			return text_forms[1];
+		}
+		if (n1 == 1) {
+			return text_forms[0];
+		}
+		return text_forms[2];
+	}
 }
