@@ -15,7 +15,7 @@ statsButtons.forEach(button => {
 
 /***/ }),
 
-/***/ 681:
+/***/ 477:
 /***/ (() => {
 
 const startDateInput = document.getElementById("firstDateInputB24");
@@ -33,22 +33,6 @@ if (startDateInput !== null && endDateInput !== null) {
 
 /***/ }),
 
-/***/ 742:
-/***/ (() => {
-
-const fileInputButton = document.getElementById("fileInputButton");
-const fileInput = document.getElementById("fileInput");
-if (fileInputButton !== null && fileInput !== null) {
-  fileInputButton.addEventListener("click", () => {
-    fileInput.click();
-  });
-  fileInput.addEventListener("change", () => {
-    console.log(fileInput.files);
-  });
-}
-
-/***/ }),
-
 /***/ 316:
 /***/ (() => {
 
@@ -58,6 +42,91 @@ if (slider !== null) {
     e.stopPropagation();
     slider.classList.toggle("switch-active");
   });
+}
+
+/***/ }),
+
+/***/ 887:
+/***/ (() => {
+
+const switchBtn = document.querySelector(".switch");
+const root = document.querySelector(":root");
+
+// были в импортах из своих скриптов
+const heroList1c = document.querySelector(".hero__list-1c");
+const heroListBitrix = document.querySelector(".hero__list-bitrix");
+const heroTitle = document.querySelector(".hero__title");
+const contactsLabelBitrix = document.querySelector(".contacts__label-bitrix");
+const contactsLabel1c = document.querySelector(".contacts__label-1с");
+const contactSliders = document.querySelectorAll(".contacts__container-slider");
+const statsButtonsContainers = document.querySelectorAll(".stats__block-buttons");
+const heroChart1cContainer = document.querySelector(".hero__container-graph-1c");
+const heroChartBitrixContainer = document.querySelector(".hero__container-graph-bitrix");
+const heroDate1c = document.querySelector(".hero__date-1c");
+const heroDateb24 = document.querySelector(".hero__date-b24");
+let currentTheme = "theme1c";
+const themes = {
+  theme1c: {
+    "--orange-color": "#e15335",
+    "--blue-color": "#299b9c"
+  },
+  bitrix: {
+    "--orange-color": "#299b9c",
+    "--blue-color": "#e15335"
+  }
+};
+switchBtn.addEventListener("change", () => {
+  changeTheme();
+});
+function changeTheme() {
+  if (currentTheme == "theme1c") {
+    Object.entries(themes.bitrix).forEach(_ref => {
+      let [key, value] = _ref;
+      root.style.setProperty(key, value);
+    });
+    changeThemeContent();
+    currentTheme = "bitrix";
+  } else {
+    Object.entries(themes.theme1c).forEach(_ref2 => {
+      let [key, value] = _ref2;
+      root.style.setProperty(key, value);
+    });
+    changeThemeContent();
+    currentTheme = "theme1c";
+  }
+}
+function changeThemeContent() {
+  heroList1c.classList.toggle("hero__list-visible");
+  heroChart1cContainer.classList.toggle("hero__container-graph-visible");
+  heroListBitrix.classList.toggle("hero__list-visible");
+  heroChartBitrixContainer.classList.toggle("hero__container-graph-visible");
+  contactSliders.forEach(slider => {
+    slider.classList.toggle("contacts__container-slider-visible");
+  });
+  statsButtonsContainers.forEach(container => {
+    container.classList.toggle("stats__block-buttons-visible");
+  });
+  heroDate1c.classList.toggle("hero__date-hidden");
+  heroDateb24.classList.toggle("hero__date-hidden");
+  changeText();
+}
+function changeText() {
+  if (currentTheme == "theme1c") {
+    heroTitle.innerHTML = "Конверсия приемов";
+    contactsLabel1c.innerHTML = "Б24";
+    contactsLabelBitrix.innerHTML = "1C";
+  } else {
+    heroTitle.innerHTML = "Конверсия лидов";
+    contactsLabelBitrix.innerHTML = "Б24";
+    contactsLabel1c.innerHTML = "1C";
+  }
+}
+function calcWholeSum(data) {
+  let sum = null;
+  data.forEach(value => {
+    sum += value;
+  });
+  return sum;
 }
 
 /***/ }),
@@ -24418,7 +24487,7 @@ function getDatasetArea(meta) {
         };
     }
 }
-class Chart {
+class chart_Chart {
     static defaults = defaults;
     static instances = instances;
     static overrides = overrides;
@@ -25246,7 +25315,7 @@ class Chart {
     }
 }
 function invalidatePlugins() {
-    return each(Chart.instances, (chart)=>chart._plugins.invalidate());
+    return each(chart_Chart.instances, (chart)=>chart._plugins.invalidate());
 }
 
 function clipArc(ctx, element, endAngle) {
@@ -30284,10 +30353,10 @@ const registerables = [
 ;// CONCATENATED MODULE: ./node_modules/chart.js/auto/auto.js
 
 
-Chart.register(...registerables);
+chart_Chart.register(...registerables);
 
 
-/* harmony default export */ const auto = (Chart);
+/* harmony default export */ const auto = (chart_Chart);
 
 ;// CONCATENATED MODULE: ./node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.esm.js
 /*!
@@ -31653,9 +31722,11 @@ var chartjs_plugin_doughnutlabel_rebourne_default = /*#__PURE__*/__webpack_requi
 // регистрация плагинов
 auto.register(chartjs_plugin_datalabels_esm_plugin);
 auto.register((chartjs_plugin_doughnutlabel_rebourne_default()));
-const ctx = document.getElementById("myChart1c");
-const heroList1c = document.querySelector(".hero__list-1c");
-const heroItemInner = `
+function drawHeroRadial1c(data) {
+  const ctx = document.getElementById("myChart1c");
+  // export const heroList1c = document.querySelector(".hero__list-1c");
+  const heroList1c = document.querySelector(".hero__list-1c");
+  const heroItemInner = `
 	<div class="hero__container-icon-text">
 		<svg class="hero__icon-ellipse">
 			<use xlink:href="img/sprite.svg#ellipse"></use>
@@ -31665,254 +31736,215 @@ const heroItemInner = `
 	<span class="hero__text hero__text-persent title__h4"></span>
 	<span class="hero__text hero__text-count title__h4"></span>`;
 
-// данные которые используются для отрисовки диаграммы и списка
-const heroData1c = [{
-  label: "1 прием",
-  persentage: "18%",
-  count: 50
-}, {
-  label: "2 прием",
-  persentage: "30%",
-  count: 3
-}, {
-  label: "3 приема",
-  persentage: "5%",
-  count: 44
-}, {
-  label: "4 приема",
-  persentage: "11%",
-  count: 112
-}, {
-  label: "5 приемов",
-  persentage: "20%",
-  count: 23
-}, {
-  label: "6 приемов",
-  persentage: "12%",
-  count: 35
-}, {
-  label: "7 приемов",
-  persentage: "4%",
-  count: 32
-}, {
-  label: "8 приемов",
-  persentage: "5%",
-  count: 98
-}, {
-  label: "9 приемов",
-  persentage: "12%",
-  count: 23
-}, {
-  label: "10+ приемов",
-  persentage: "0.5%",
-  count: 3
-}];
-const hero_radial_1c_colors = ["#E15335", "#299B9C", "#469C78", "#52469C", "#D31DA0", "#00D7BD", "#F66818", "#298B9C", "#CFD311", "#FF002E"];
-heroData1c.forEach((row, idx) => {
-  // создаем новый айтем
-  let heroItem = document.createElement("li");
-  heroItem.classList.add("hero__item");
-  heroItem.innerHTML = heroItemInner;
+  // данные которые используются для отрисовки диаграммы и списка
+  const heroData1c = data;
+  const colors = ["#E15335", "#299B9C", "#469C78", "#52469C", "#D31DA0", "#00D7BD", "#F66818", "#298B9C", "#CFD311", "#FF002E"];
+  heroData1c.forEach((row, idx) => {
+    // создаем новый айтем
+    let heroItem = document.createElement("li");
+    heroItem.classList.add("hero__item");
+    heroItem.innerHTML = heroItemInner;
 
-  // изменяем контент внутри
-  heroItem.querySelector(".hero__text-label").innerHTML = row.label;
-  heroItem.querySelector(".hero__text-persent").innerHTML = row.persentage;
-  heroItem.querySelector(".hero__text-count").innerHTML = row.count + " пац.";
-  heroItem.querySelector(".hero__icon-ellipse").style.fill = hero_radial_1c_colors[idx];
+    // изменяем контент внутри
+    heroItem.querySelector(".hero__text-label").innerHTML = row.label;
+    heroItem.querySelector(".hero__text-persent").innerHTML = row.persentage;
+    heroItem.querySelector(".hero__text-count").innerHTML = row.count + " пац.";
+    heroItem.querySelector(".hero__icon-ellipse").style.fill = colors[idx];
 
-  // засовываем в лист
-  heroList1c.appendChild(heroItem);
-});
-const data1c = {
-  labels: heroData1c.map(row => row.label),
-  datasets: [{
-    label: "",
-    data: heroData1c.map(row => row.count),
-    backgroundColor: hero_radial_1c_colors,
-    datalabels: {
-      labels: {
-        index: {
-          color: "#1e1e1e",
-          font: {
-            size: 12
-          },
-          align: "end",
-          anchor: "end"
+    // засовываем в лист
+    heroList1c.appendChild(heroItem);
+  });
+  const data1c = {
+    labels: heroData1c.map(row => row.label),
+    datasets: [{
+      label: "",
+      data: heroData1c.map(row => row.count),
+      backgroundColor: colors,
+      datalabels: {
+        labels: {
+          index: {
+            color: "#1e1e1e",
+            font: {
+              size: 12
+            },
+            align: "end",
+            anchor: "end"
+          }
+        }
+      }
+    }]
+  };
+  const config1c = {
+    type: "doughnut",
+    data: data1c,
+    options: {
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false,
+          position: "nearest",
+          external: externalTooltipHandler
+        },
+        doughnutlabel: {
+          paddingPercentage: 5,
+          labels: [{
+            text: "a",
+            font: {
+              size: 22,
+              weight: "400"
+            },
+            color: "transparent"
+          }, {
+            text: "Всего пациентов:",
+            font: {
+              size: 18,
+              weight: "400"
+            }
+          }, {
+            text: calcAllPatients(heroData1c),
+            font: {
+              size: 24,
+              weight: "500"
+            }
+          }, {
+            text: "a",
+            font: {
+              size: 18,
+              weight: "400"
+            },
+            color: "transparent"
+          }, {
+            text: "Стоимость одного лида:",
+            font: {
+              size: 18,
+              weight: "400"
+            }
+          }, {
+            text: 250,
+            font: {
+              size: 24,
+              weight: "500"
+            }
+          }]
+        }
+      },
+      cutout: "82%",
+      layout: {
+        padding: {
+          top: 35,
+          bottom: 35,
+          left: 35,
+          right: 35
         }
       }
     }
-  }]
-};
-const config1c = {
-  type: "doughnut",
-  data: data1c,
-  options: {
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        enabled: false,
-        position: "nearest",
-        external: externalTooltipHandler
-      },
-      doughnutlabel: {
-        paddingPercentage: 5,
-        labels: [{
-          text: "a",
-          font: {
-            size: 22,
-            weight: "400"
-          },
-          color: "transparent"
-        }, {
-          text: "Всего пациентов:",
-          font: {
-            size: 18,
-            weight: "400"
-          }
-        }, {
-          text: calcAllPatients(heroData1c),
-          font: {
-            size: 24,
-            weight: "500"
-          }
-        }, {
-          text: "a",
-          font: {
-            size: 18,
-            weight: "400"
-          },
-          color: "transparent"
-        }, {
-          text: "Стоимость одного лида:",
-          font: {
-            size: 18,
-            weight: "400"
-          }
-        }, {
-          text: 250,
-          font: {
-            size: 24,
-            weight: "500"
-          }
-        }]
-      }
-    },
-    cutout: "82%",
-    layout: {
-      padding: {
-        top: 35,
-        bottom: 35,
-        left: 35,
-        right: 35
-      }
+  };
+  // считает общее количество пациентов из data
+  function calcAllPatients(data) {
+    let sum = null;
+    data.forEach(row => {
+      sum += row.count;
+    });
+    return sum;
+  }
+  function getOrCreateTooltip(chart) {
+    let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
+    if (!tooltipEl) {
+      tooltipEl = document.createElement("div");
+      tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+      tooltipEl.style.borderRadius = "100%";
+      tooltipEl.style.color = "white";
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = "none";
+      tooltipEl.style.position = "absolute";
+      tooltipEl.style.transform = "translate(-50%, 0)";
+      tooltipEl.style.transition = "all .1s ease";
+      const table = document.createElement("div");
+      table.style.margin = "0px";
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
     }
+    return tooltipEl;
   }
-};
+  function externalTooltipHandler(context) {
+    // Tooltip Element
+    const {
+      chart,
+      tooltip
+    } = context;
+    const tooltipEl = getOrCreateTooltip(chart);
 
-// считает общее количество пациентов из data
-function calcAllPatients(data) {
-  let sum = null;
-  data.forEach(row => {
-    sum += row.count;
-  });
-  return sum;
-}
-function getOrCreateTooltip(chart) {
-  let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
-  if (!tooltipEl) {
-    tooltipEl = document.createElement("div");
-    tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
-    tooltipEl.style.borderRadius = "100%";
-    tooltipEl.style.color = "white";
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.pointerEvents = "none";
-    tooltipEl.style.position = "absolute";
-    tooltipEl.style.transform = "translate(-50%, 0)";
-    tooltipEl.style.transition = "all .1s ease";
-    const table = document.createElement("div");
-    table.style.margin = "0px";
-    tooltipEl.appendChild(table);
-    chart.canvas.parentNode.appendChild(tooltipEl);
-  }
-  return tooltipEl;
-}
-function externalTooltipHandler(context) {
-  // Tooltip Element
-  const {
-    chart,
-    tooltip
-  } = context;
-  const tooltipEl = getOrCreateTooltip(chart);
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
+    }
 
-  // Hide if no tooltip
-  if (tooltip.opacity === 0) {
-    tooltipEl.style.opacity = 0;
-    return;
-  }
-
-  // Set Text
-  if (tooltip.body) {
-    const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(b => b.lines);
-    const tableHead = document.createElement("div");
-    tableHead.classList = "hero__header-tooltip";
-    titleLines.forEach((title, i) => {
-      const colors = tooltip.labelColors[i];
-      const span = document.createElement("div");
-      span.classList = "hero__color-tooltip";
-      span.style.background = colors.backgroundColor;
-      span.style.borderColor = colors.borderColor;
-      const tr = document.createElement("div");
-      tr.style.borderWidth = 0;
-      const th = document.createElement("div");
-      th.style.borderWidth = 0;
-      const text = document.createTextNode(title);
-      tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
-      th.appendChild(text);
-      tr.appendChild(th);
-      tableHead.appendChild(span);
-      tableHead.appendChild(tr);
-    });
-    const tableBody = document.createElement("div");
-    tableBody.classList = "hero__body-tooltip";
-    bodyLines.forEach(body => {
-      const tr = document.createElement("div");
-      tr.innerHTML = body + " пац.";
-      tableBody.appendChild(tr);
-    });
-    titleLines.forEach(title => {
-      const td = document.createElement("div");
-      const foundedData = heroData1c.find(element => {
-        return element.label == title;
+    // Set Text
+    if (tooltip.body) {
+      const titleLines = tooltip.title || [];
+      const bodyLines = tooltip.body.map(b => b.lines);
+      const tableHead = document.createElement("div");
+      tableHead.classList = "hero__header-tooltip";
+      titleLines.forEach((title, i) => {
+        const colors = tooltip.labelColors[i];
+        const span = document.createElement("div");
+        span.classList = "hero__color-tooltip";
+        span.style.background = colors.backgroundColor;
+        span.style.borderColor = colors.borderColor;
+        const tr = document.createElement("div");
+        tr.style.borderWidth = 0;
+        const th = document.createElement("div");
+        th.style.borderWidth = 0;
+        const text = document.createTextNode(title);
+        tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(span);
+        tableHead.appendChild(tr);
       });
-      td.innerHTML = foundedData.persentage;
-      tableBody.appendChild(td);
-    });
-    const tableRoot = tooltipEl.querySelector("div");
-    tableRoot.classList = "hero__content-tooltip";
+      const tableBody = document.createElement("div");
+      tableBody.classList = "hero__body-tooltip";
+      bodyLines.forEach(body => {
+        const tr = document.createElement("div");
+        tr.innerHTML = body + " пац.";
+        tableBody.appendChild(tr);
+      });
+      titleLines.forEach(title => {
+        const td = document.createElement("div");
+        const foundedData = heroData1c.find(element => {
+          return element.label == title;
+        });
+        td.innerHTML = foundedData.persentage;
+        tableBody.appendChild(td);
+      });
+      const tableRoot = tooltipEl.querySelector("div");
+      tableRoot.classList = "hero__content-tooltip";
 
-    // Remove old children
-    while (tableRoot.firstChild) {
-      tableRoot.firstChild.remove();
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+
+      // Add new children
+      tableRoot.appendChild(tableHead);
+      tableRoot.appendChild(tableBody);
     }
+    const {
+      offsetLeft: positionX,
+      offsetTop: positionY
+    } = chart.canvas;
 
-    // Add new children
-    tableRoot.appendChild(tableHead);
-    tableRoot.appendChild(tableBody);
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + "px";
+    tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
   }
-  const {
-    offsetLeft: positionX,
-    offsetTop: positionY
-  } = chart.canvas;
-
-  // Display, position, and set styles for font
-  tooltipEl.style.opacity = 1;
-  tooltipEl.style.left = positionX + tooltip.caretX + "px";
-  tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+  const heroChart1c = new auto(ctx, config1c);
+  return heroChart1c;
 }
-const heroChart1c = new auto(ctx, config1c);
 ;// CONCATENATED MODULE: ./src/js/components/hero-radial-bitrix.js
 
 
@@ -31921,9 +31953,13 @@ const heroChart1c = new auto(ctx, config1c);
 // регистрация плагинов
 auto.register(chartjs_plugin_datalabels_esm_plugin);
 auto.register((chartjs_plugin_doughnutlabel_rebourne_default()));
-const hero_radial_bitrix_ctx = document.getElementById("myChartBitrix");
-const heroListBitrix = document.querySelector(".hero__list-bitrix");
-const hero_radial_bitrix_heroItemInner = `
+function drawHeroRadialBitrix(data) {
+  // данные для отрисовки в диаграмме
+  const heroDataBitrix = data;
+  const ctx = document.getElementById("myChartBitrix");
+  // export const heroListBitrix = document.querySelector(".hero__list-bitrix");
+  const heroListBitrix = document.querySelector(".hero__list-bitrix");
+  const heroItemInner = `
 	<div class="hero__container-icon-text">
 		<svg class="hero__icon-ellipse">
 			<use xlink:href="img/sprite.svg#ellipse"></use>
@@ -31932,258 +31968,220 @@ const hero_radial_bitrix_heroItemInner = `
 	</div>
 	<span class="hero__text hero__text-persent title__h4"></span>
 	<span class="hero__text hero__text-count title__h4"></span>`;
+  const colors = ["#E15335", "#299B9C", "#469C78", "#52469C", "#D31DA0", "#00D7BD", "#F66818", "#298B9C", "#CFD311", "#FF002E"];
+  heroDataBitrix.forEach((row, idx) => {
+    // создаем новый айтем
+    let heroItem = document.createElement("li");
+    heroItem.classList.add("hero__item");
+    heroItem.innerHTML = heroItemInner;
 
-// данные которые используются для отрисовки диаграммы и списка
-const heroDataBitrix = [{
-  label: "1 прием",
-  persentage: "18%",
-  count: 150
-}, {
-  label: "2 приема",
-  persentage: "30%",
-  count: 6
-}, {
-  label: "3 приема",
-  persentage: "5%",
-  count: 24
-}, {
-  label: "4 приема",
-  persentage: "11%",
-  count: 112
-}, {
-  label: "5 приемов",
-  persentage: "20%",
-  count: 43
-}, {
-  label: "6 приемов",
-  persentage: "12%",
-  count: 35
-}, {
-  label: "7 приемов",
-  persentage: "4%",
-  count: 32
-}, {
-  label: "8 приемов",
-  persentage: "5%",
-  count: 98
-}, {
-  label: "9 приемов",
-  persentage: "12%",
-  count: 32
-}, {
-  label: "10+ приемов",
-  persentage: "0.5%",
-  count: 12
-}];
-const hero_radial_bitrix_colors = ["#E15335", "#299B9C", "#469C78", "#52469C", "#D31DA0", "#00D7BD", "#F66818", "#298B9C", "#CFD311", "#FF002E"];
-heroDataBitrix.forEach((row, idx) => {
-  // создаем новый айтем
-  let heroItem = document.createElement("li");
-  heroItem.classList.add("hero__item");
-  heroItem.innerHTML = hero_radial_bitrix_heroItemInner;
+    // изменяем контент внутри
+    heroItem.querySelector(".hero__text-label").innerHTML = row.label;
+    heroItem.querySelector(".hero__text-persent").innerHTML = row.persentage;
+    heroItem.querySelector(".hero__text-count").innerHTML = row.count + " пац.";
+    heroItem.querySelector(".hero__icon-ellipse").style.fill = colors[idx];
 
-  // изменяем контент внутри
-  heroItem.querySelector(".hero__text-label").innerHTML = row.label;
-  heroItem.querySelector(".hero__text-persent").innerHTML = row.persentage;
-  heroItem.querySelector(".hero__text-count").innerHTML = row.count + " пац.";
-  heroItem.querySelector(".hero__icon-ellipse").style.fill = hero_radial_bitrix_colors[idx];
-
-  // засовываем в лист
-  heroListBitrix.appendChild(heroItem);
-});
-const dataBitrix = {
-  labels: heroDataBitrix.map(row => row.label),
-  datasets: [{
-    label: "",
-    data: heroDataBitrix.map(row => row.count),
-    backgroundColor: hero_radial_bitrix_colors,
-    datalabels: {
-      labels: {
-        index: {
-          color: "#1e1e1e",
-          font: {
-            size: 12
-          },
-          align: "end",
-          anchor: "end"
+    // засовываем в лист
+    heroListBitrix.appendChild(heroItem);
+  });
+  const dataBitrix = {
+    labels: heroDataBitrix.map(row => row.label),
+    datasets: [{
+      label: "",
+      data: heroDataBitrix.map(row => row.count),
+      backgroundColor: colors,
+      datalabels: {
+        labels: {
+          index: {
+            color: "#1e1e1e",
+            font: {
+              size: 12
+            },
+            align: "end",
+            anchor: "end"
+          }
+        }
+      }
+    }]
+  };
+  const configBitrix = {
+    type: "doughnut",
+    data: dataBitrix,
+    options: {
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false,
+          position: "nearest",
+          external: externalTooltipHandler
+        },
+        doughnutlabel: {
+          paddingPercentage: 5,
+          labels: [{
+            text: "a",
+            font: {
+              size: 22,
+              weight: "400"
+            },
+            color: "transparent"
+          }, {
+            text: "Всего пациентов:",
+            font: {
+              size: 18,
+              weight: "400"
+            }
+          }, {
+            text: calcAllPatients(heroDataBitrix),
+            font: {
+              size: 24,
+              weight: "500"
+            }
+          }, {
+            text: "a",
+            font: {
+              size: 18,
+              weight: "400"
+            },
+            color: "transparent"
+          }, {
+            text: "Стоимость одного лида:",
+            font: {
+              size: 18,
+              weight: "400"
+            }
+          }, {
+            text: 250,
+            font: {
+              size: 24,
+              weight: "500"
+            }
+          }]
+        }
+      },
+      cutout: "82%",
+      layout: {
+        padding: {
+          top: 35,
+          bottom: 35,
+          left: 35,
+          right: 35
         }
       }
     }
-  }]
-};
-const configBitrix = {
-  type: "doughnut",
-  data: dataBitrix,
-  options: {
-    plugins: {
-      legend: {
-        display: false
-      },
-      tooltip: {
-        enabled: false,
-        position: "nearest",
-        external: hero_radial_bitrix_externalTooltipHandler
-      },
-      doughnutlabel: {
-        paddingPercentage: 5,
-        labels: [{
-          text: "a",
-          font: {
-            size: 22,
-            weight: "400"
-          },
-          color: "transparent"
-        }, {
-          text: "Всего пациентов:",
-          font: {
-            size: 18,
-            weight: "400"
-          }
-        }, {
-          text: hero_radial_bitrix_calcAllPatients(heroDataBitrix),
-          font: {
-            size: 24,
-            weight: "500"
-          }
-        }, {
-          text: "a",
-          font: {
-            size: 18,
-            weight: "400"
-          },
-          color: "transparent"
-        }, {
-          text: "Стоимость одного лида:",
-          font: {
-            size: 18,
-            weight: "400"
-          }
-        }, {
-          text: 250,
-          font: {
-            size: 24,
-            weight: "500"
-          }
-        }]
-      }
-    },
-    cutout: "82%",
-    layout: {
-      padding: {
-        top: 35,
-        bottom: 35,
-        left: 35,
-        right: 35
-      }
+  };
+  const heroChartBitrix = new auto(ctx, configBitrix);
+
+  // считает общее количество пациентов из data
+  function calcAllPatients(data) {
+    let sum = null;
+    data.forEach(row => {
+      sum += row.count;
+    });
+    return sum;
+  }
+  function getOrCreateTooltip(chart) {
+    let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
+    if (!tooltipEl) {
+      tooltipEl = document.createElement("div");
+      tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+      tooltipEl.style.borderRadius = "100%";
+      tooltipEl.style.color = "white";
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = "none";
+      tooltipEl.style.position = "absolute";
+      tooltipEl.style.transform = "translate(-50%, 0)";
+      tooltipEl.style.transition = "all .1s ease";
+      const table = document.createElement("div");
+      table.style.margin = "0px";
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
     }
+    return tooltipEl;
   }
-};
-const heroChartBitrix = new auto(hero_radial_bitrix_ctx, configBitrix);
+  function externalTooltipHandler(context) {
+    // Tooltip Element
+    const {
+      chart,
+      tooltip
+    } = context;
+    const tooltipEl = getOrCreateTooltip(chart);
 
-// считает общее количество пациентов из data
-function hero_radial_bitrix_calcAllPatients(data) {
-  let sum = null;
-  data.forEach(row => {
-    sum += row.count;
-  });
-  return sum;
-}
-function hero_radial_bitrix_getOrCreateTooltip(chart) {
-  let tooltipEl = hero_radial_bitrix_ctx.parentNode.querySelector(".hero__container-tooltip");
-  if (!tooltipEl) {
-    tooltipEl = document.createElement("div");
-    tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
-    tooltipEl.style.borderRadius = "100%";
-    tooltipEl.style.color = "white";
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.pointerEvents = "none";
-    tooltipEl.style.position = "absolute";
-    tooltipEl.style.transform = "translate(-50%, 0)";
-    tooltipEl.style.transition = "all .1s ease";
-    const table = document.createElement("div");
-    table.style.margin = "0px";
-    tooltipEl.appendChild(table);
-    chart.canvas.parentNode.appendChild(tooltipEl);
-  }
-  return tooltipEl;
-}
-function hero_radial_bitrix_externalTooltipHandler(context) {
-  // Tooltip Element
-  const {
-    chart,
-    tooltip
-  } = context;
-  const tooltipEl = hero_radial_bitrix_getOrCreateTooltip(chart);
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
+    }
 
-  // Hide if no tooltip
-  if (tooltip.opacity === 0) {
-    tooltipEl.style.opacity = 0;
-    return;
-  }
-
-  // Set Text
-  if (tooltip.body) {
-    const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(b => b.lines);
-    const tableHead = document.createElement("div");
-    tableHead.classList = "hero__header-tooltip";
-    titleLines.forEach((title, i) => {
-      const colors = tooltip.labelColors[i];
-      const span = document.createElement("div");
-      span.classList = "hero__color-tooltip";
-      span.style.background = colors.backgroundColor;
-      span.style.borderColor = colors.borderColor;
-      const tr = document.createElement("div");
-      tr.style.borderWidth = 0;
-      const th = document.createElement("div");
-      th.style.borderWidth = 0;
-      const text = document.createTextNode(title);
-      tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
-      th.appendChild(text);
-      tr.appendChild(th);
-      tableHead.appendChild(span);
-      tableHead.appendChild(tr);
-    });
-    const tableBody = document.createElement("div");
-    tableBody.classList = "hero__body-tooltip";
-    bodyLines.forEach(body => {
-      const tr = document.createElement("div");
-      tr.innerHTML = body + " пац.";
-      tableBody.appendChild(tr);
-    });
-    titleLines.forEach(title => {
-      const td = document.createElement("div");
-      const foundedData = heroDataBitrix.find(element => {
-        return element.label == title;
+    // Set Text
+    if (tooltip.body) {
+      const titleLines = tooltip.title || [];
+      const bodyLines = tooltip.body.map(b => b.lines);
+      const tableHead = document.createElement("div");
+      tableHead.classList = "hero__header-tooltip";
+      titleLines.forEach((title, i) => {
+        const colors = tooltip.labelColors[i];
+        const span = document.createElement("div");
+        span.classList = "hero__color-tooltip";
+        span.style.background = colors.backgroundColor;
+        span.style.borderColor = colors.borderColor;
+        const tr = document.createElement("div");
+        tr.style.borderWidth = 0;
+        const th = document.createElement("div");
+        th.style.borderWidth = 0;
+        const text = document.createTextNode(title);
+        tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(span);
+        tableHead.appendChild(tr);
       });
-      td.innerHTML = foundedData.persentage;
-      tableBody.appendChild(td);
-    });
-    const tableRoot = tooltipEl.querySelector("div");
-    tableRoot.classList = "hero__content-tooltip";
+      const tableBody = document.createElement("div");
+      tableBody.classList = "hero__body-tooltip";
+      bodyLines.forEach(body => {
+        const tr = document.createElement("div");
+        tr.innerHTML = body + " пац.";
+        tableBody.appendChild(tr);
+      });
+      titleLines.forEach(title => {
+        const td = document.createElement("div");
+        const foundedData = heroDataBitrix.find(element => {
+          return element.label == title;
+        });
+        td.innerHTML = foundedData.persentage;
+        tableBody.appendChild(td);
+      });
+      const tableRoot = tooltipEl.querySelector("div");
+      tableRoot.classList = "hero__content-tooltip";
 
-    // Remove old children
-    while (tableRoot.firstChild) {
-      tableRoot.firstChild.remove();
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+
+      // Add new children
+      tableRoot.appendChild(tableHead);
+      tableRoot.appendChild(tableBody);
     }
+    const {
+      offsetLeft: positionX,
+      offsetTop: positionY
+    } = chart.canvas;
 
-    // Add new children
-    tableRoot.appendChild(tableHead);
-    tableRoot.appendChild(tableBody);
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + "px";
+    tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
   }
-  const {
-    offsetLeft: positionX,
-    offsetTop: positionY
-  } = chart.canvas;
-
-  // Display, position, and set styles for font
-  tooltipEl.style.opacity = 1;
-  tooltipEl.style.left = positionX + tooltip.caretX + "px";
-  tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+  return heroChartBitrix;
 }
 // EXTERNAL MODULE: ./src/js/components/switch.js
 var components_switch = __webpack_require__(316);
+// EXTERNAL MODULE: ./src/js/components/theme-change.js
+var theme_change = __webpack_require__(887);
 ;// CONCATENATED MODULE: ./src/js/components/stats-radial-conversy.js
+
 
 
 
@@ -32191,169 +32189,199 @@ var components_switch = __webpack_require__(316);
 // регистрация плагинов
 auto.register(chartjs_plugin_datalabels_esm_plugin);
 auto.register((chartjs_plugin_doughnutlabel_rebourne_default()));
-const stats_radial_conversy_ctx = document.getElementById("statsRadialConversy");
+function stats_radial_conversy_drawStatsRadialConversy(dataConversy, dataConversyEmpty) {
+  const ctx = document.getElementById("statsRadialConversy");
 
-// данные которые используются для отрисовки диаграммы и списка
-const statsRadialDataConversy = {
-  count1c: 50,
-  bitrix: 79
-};
-const statsRadiaDataConversyEmpty = {
-  count: 22,
-  persent: 10
-};
-const statsDataKeys = Object.keys(statsRadialDataConversy);
-const stats_radial_conversy_colors = ["#E15335", "#299B9C"];
-const data = {
-  labels: [""],
-  datasets: [{
-    data: statsDataKeys.map(key => statsRadialDataConversy[key]),
-    backgroundColor: stats_radial_conversy_colors
-  }]
-};
-const config = {
-  type: "doughnut",
-  data: data,
-  options: {
-    plugins: {
-      legend: {
-        display: false
+  // данные которые используются для отрисовки диаграммы и списка
+  const statsRadialDataConversy = dataConversy;
+  const statsRadiaDataConversyEmpty = dataConversyEmpty;
+  const statsDataKeys = Object.keys(statsRadialDataConversy);
+  const colors = ["#E15335", "#299B9C"];
+  const data = {
+    labels: [""],
+    datasets: [{
+      data: statsDataKeys.map(key => statsRadialDataConversy[key]),
+      backgroundColor: colors
+    }]
+  };
+  const config = {
+    type: "doughnut",
+    data: data,
+    options: {
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false,
+          position: "nearest",
+          external: externalTooltipHandler
+        },
+        doughnutlabel: {
+          paddingPercentage: 5,
+          labels: [{
+            text: "Всего",
+            font: {
+              size: 10,
+              weight: "400"
+            }
+          }, {
+            text: calcWholeSum(Object.values(statsRadialDataConversy)) + " лид",
+            font: {
+              size: 10,
+              weight: "700"
+            }
+          }]
+        },
+        datalabels: {
+          display: false
+        }
       },
-      tooltip: {
-        enabled: false,
-        position: "nearest",
-        external: stats_radial_conversy_externalTooltipHandler
+      cutout: "75%",
+      layout: {
+        padding: {
+          top: 10,
+          bottom: 10,
+          left: 10,
+          right: 10
+        }
       },
-      doughnutlabel: {
-        paddingPercentage: 5,
-        labels: [{
-          text: "Всего",
-          font: {
-            size: 10,
-            weight: "400"
-          }
-        }, {
-          text: calcWholeSum(Object.values(statsRadialDataConversy)) + " лид",
-          font: {
-            size: 10,
-            weight: "700"
-          }
-        }]
-      },
-      datalabels: {
-        display: false
-      }
-    },
-    cutout: "75%",
-    layout: {
-      padding: {
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: 10
-      }
-    },
-    rotation: -15
-  }
-};
-const statsRadialChart = new auto(stats_radial_conversy_ctx, config);
+      rotation: -15
+    }
+  };
+  const statsConversyPersent1c = document.querySelector(".stats__text-persent-1c");
+  const statsConversyCount1c = document.querySelector(".stats__text-count-1c");
+  const statsConversyPersentb24 = document.querySelector(".stats__text-persent-b24");
+  const statsConversyCountb24 = document.querySelector(".stats__text-count-b24");
+  const statsConversyPersentEmpty = document.querySelector(".stats__text-persent-empty");
+  const statsConversyCountEpmty = document.querySelector(".stats__text-count-empty");
 
-// считает общее количество пациентов из data
-function calcWholeSum(data) {
-  let sum = null;
-  data.forEach(value => {
-    sum += value;
-  });
-  return sum;
-}
-function stats_radial_conversy_getOrCreateTooltip(chart) {
-  let tooltipEl = stats_radial_conversy_ctx.parentNode.querySelector(".hero__container-tooltip");
-  if (!tooltipEl) {
-    tooltipEl = document.createElement("div");
-    tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
-    tooltipEl.style.borderRadius = "100%";
-    tooltipEl.style.color = "white";
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.pointerEvents = "none";
-    tooltipEl.style.position = "absolute";
-    tooltipEl.style.transform = "translate(-50%, 0)";
-    tooltipEl.style.transition = "all .1s ease";
-    const table = document.createElement("div");
-    table.style.margin = "0px";
-    tooltipEl.appendChild(table);
-    chart.canvas.parentNode.appendChild(tooltipEl);
-  }
-  return tooltipEl;
-}
-function stats_radial_conversy_externalTooltipHandler(context) {
-  // Tooltip Element
-  const {
-    chart,
-    tooltip
-  } = context;
-  const tooltipEl = stats_radial_conversy_getOrCreateTooltip(chart);
+  // конверсия лидов 1c
+  const count1cPersentCoversy = Math.round(statsRadialDataConversy.count1c * 100 / calcWholeSum(Object.values(statsRadialDataConversy)));
+  statsConversyCount1c.innerHTML = statsRadialDataConversy.count1c + " пац.";
+  statsConversyPersent1c.innerHTML = count1cPersentCoversy + "%";
 
-  // Hide if no tooltip
-  if (tooltip.opacity === 0) {
-    tooltipEl.style.opacity = 0;
-    return;
-  }
+  // конверсия лидов b24
+  statsConversyCountb24.innerHTML = statsRadialDataConversy.bitrix + " пац.";
+  statsConversyPersentb24.innerHTML = 100 - count1cPersentCoversy + "%";
 
-  // Set Text
-  if (tooltip.body) {
-    const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(b => b.lines);
-    const tableHead = document.createElement("div");
-    tableHead.classList = "hero__header-tooltip";
-    titleLines.forEach((title, i) => {
-      const colors = tooltip.labelColors[i];
-      const span = document.createElement("div");
-      span.classList = "hero__color-tooltip";
-      span.style.background = colors.backgroundColor;
-      span.style.borderColor = colors.borderColor;
-      const tr = document.createElement("div");
-      tr.style.borderWidth = 0;
-      const th = document.createElement("div");
-      th.style.borderWidth = 0;
-      const text = document.createTextNode(title);
-      tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
-      th.appendChild(text);
-      tr.appendChild(th);
-      tableHead.appendChild(span);
-      tableHead.appendChild(tr);
+  // без приема
+  statsConversyCountEpmty.innerHTML = statsRadiaDataConversyEmpty.count + " " + declOfNum(statsRadiaDataConversyEmpty.count, ["лид", "лида", "лидов"]);
+  statsConversyPersentEmpty.innerHTML = statsRadiaDataConversyEmpty.persent + "%";
+  const statsRadialChart = new Chart(ctx, config);
+
+  // считает общее количество пациентов из data
+  function calcWholeSum(data) {
+    let sum = null;
+    data.forEach(value => {
+      sum += value;
     });
-    const tableBody = document.createElement("div");
-    tableBody.classList = "hero__body-tooltip";
-    bodyLines.forEach((body, i) => {
-      const tr = document.createElement("div");
-      tr.innerHTML = body + " пац.";
-      const foundedData = statsDataKeys.find(element => {
-        element == tooltip.title[i];
-        return element;
-      });
-      tableBody.appendChild(tr);
-    });
-    const tableRoot = tooltipEl.querySelector("div");
-    tableRoot.classList = "hero__content-tooltip";
+    return sum;
+  }
+  function getOrCreateTooltip(chart) {
+    let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
+    if (!tooltipEl) {
+      tooltipEl = document.createElement("div");
+      tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+      tooltipEl.style.borderRadius = "100%";
+      tooltipEl.style.color = "white";
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = "none";
+      tooltipEl.style.position = "absolute";
+      tooltipEl.style.transform = "translate(-50%, 0)";
+      tooltipEl.style.transition = "all .1s ease";
+      const table = document.createElement("div");
+      table.style.margin = "0px";
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+    return tooltipEl;
+  }
+  function externalTooltipHandler(context) {
+    // Tooltip Element
+    const {
+      chart,
+      tooltip
+    } = context;
+    const tooltipEl = getOrCreateTooltip(chart);
 
-    // Remove old children
-    while (tableRoot.firstChild) {
-      tableRoot.firstChild.remove();
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
     }
 
-    // Add new children
-    tableRoot.appendChild(tableHead);
-    tableRoot.appendChild(tableBody);
-  }
-  const {
-    offsetLeft: positionX,
-    offsetTop: positionY
-  } = chart.canvas;
+    // Set Text
+    if (tooltip.body) {
+      const titleLines = tooltip.title || [];
+      const bodyLines = tooltip.body.map(b => b.lines);
+      const tableHead = document.createElement("div");
+      tableHead.classList = "hero__header-tooltip";
+      titleLines.forEach((title, i) => {
+        const colors = tooltip.labelColors[i];
+        const span = document.createElement("div");
+        span.classList = "hero__color-tooltip";
+        span.style.background = colors.backgroundColor;
+        span.style.borderColor = colors.borderColor;
+        const tr = document.createElement("div");
+        tr.style.borderWidth = 0;
+        const th = document.createElement("div");
+        th.style.borderWidth = 0;
+        const text = document.createTextNode(title);
+        tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(span);
+        tableHead.appendChild(tr);
+      });
+      const tableBody = document.createElement("div");
+      tableBody.classList = "hero__body-tooltip";
+      bodyLines.forEach((body, i) => {
+        const tr = document.createElement("div");
+        tr.innerHTML = body + " пац.";
+        const foundedData = statsDataKeys.find(element => {
+          element == tooltip.title[i];
+          return element;
+        });
+        tableBody.appendChild(tr);
+      });
+      const tableRoot = tooltipEl.querySelector("div");
+      tableRoot.classList = "hero__content-tooltip";
 
-  // Display, position, and set styles for font
-  tooltipEl.style.opacity = 1;
-  tooltipEl.style.left = positionX + tooltip.caretX + "px";
-  tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+
+      // Add new children
+      tableRoot.appendChild(tableHead);
+      tableRoot.appendChild(tableBody);
+    }
+    const {
+      offsetLeft: positionX,
+      offsetTop: positionY
+    } = chart.canvas;
+
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + "px";
+    tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
+  }
+  function declOfNum(n, text_forms) {
+    n = Math.abs(n) % 100;
+    var n1 = n % 10;
+    if (n > 10 && n < 20) {
+      return text_forms[2];
+    }
+    if (n1 > 1 && n1 < 5) {
+      return text_forms[1];
+    }
+    if (n1 == 1) {
+      return text_forms[0];
+    }
+    return text_forms[2];
+  }
+  return statsRadialChart;
 }
 ;// CONCATENATED MODULE: ./src/js/components/stats-radial-graph.js
 
@@ -32363,293 +32391,186 @@ function stats_radial_conversy_externalTooltipHandler(context) {
 // регистрация плагинов
 auto.register(chartjs_plugin_datalabels_esm_plugin);
 auto.register((chartjs_plugin_doughnutlabel_rebourne_default()));
-const stats_radial_graph_ctx = document.getElementById("statsRadialChart");
-
-// данные которые используются для отрисовки диаграммы и списка
-const statsRadialData = {
-  count1c: 750000,
-  bitrix: 1500000
-};
-const stats_radial_graph_statsDataKeys = Object.keys(statsRadialData);
-const stats_radial_graph_colors = ["#E15335", "#299B9C"];
-const stats_radial_graph_data = {
-  labels: [""],
-  datasets: [{
-    data: stats_radial_graph_statsDataKeys.map(key => statsRadialData[key]),
-    backgroundColor: stats_radial_graph_colors
-  }]
-};
-const stats_radial_graph_config = {
-  type: "doughnut",
-  data: stats_radial_graph_data,
-  options: {
-    plugins: {
-      legend: {
-        display: false
+function stats_radial_graph_drawStatsRadial(externalData) {
+  // данные которые используются для отрисовки диаграммы и списка
+  const statsRadialData = externalData;
+  const ctx = document.getElementById("statsRadialChart");
+  const statsDataKeys = Object.keys(statsRadialData);
+  const colors = ["#E15335", "#299B9C"];
+  const data = {
+    labels: [""],
+    datasets: [{
+      data: statsDataKeys.map(key => statsRadialData[key]),
+      backgroundColor: colors
+    }]
+  };
+  const config = {
+    type: "doughnut",
+    data: data,
+    options: {
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          enabled: false,
+          position: "nearest",
+          external: externalTooltipHandler
+        },
+        doughnutlabel: {
+          paddingPercentage: 5,
+          labels: [{
+            text: "Всего",
+            font: {
+              size: 10,
+              weight: "400"
+            }
+          }, {
+            text: format(new String(calcWholeSum(Object.values(statsRadialData)))) + " ₽",
+            font: {
+              size: 10,
+              weight: "700"
+            }
+          }]
+        },
+        datalabels: {
+          display: false
+        }
       },
-      tooltip: {
-        enabled: false,
-        position: "nearest",
-        external: stats_radial_graph_externalTooltipHandler
+      cutout: "75%",
+      layout: {
+        padding: {
+          top: 10,
+          bottom: 10,
+          left: 10,
+          right: 10
+        }
       },
-      doughnutlabel: {
-        paddingPercentage: 5,
-        labels: [{
-          text: "Всего",
-          font: {
-            size: 10,
-            weight: "400"
-          }
-        }, {
-          text: format(new String(stats_radial_graph_calcWholeSum(Object.values(statsRadialData)))) + " ₽",
-          font: {
-            size: 10,
-            weight: "700"
-          }
-        }]
-      },
-      datalabels: {
-        display: false
-      }
-    },
-    cutout: "75%",
-    layout: {
-      padding: {
-        top: 10,
-        bottom: 10,
-        left: 10,
-        right: 10
-      }
-    },
-    rotation: -15
-  }
-};
-const stats_radial_graph_statsRadialChart = new auto(stats_radial_graph_ctx, stats_radial_graph_config);
+      rotation: -15
+    }
+  };
+  const statsCountStatic1c = document.querySelector(".stats__text-static-1c");
+  const statsCountStaticBitrix = document.querySelector(".stats__text-static-bitrix");
+  const statsPersentageStatic1c = document.querySelector(".stats__text-persentage-static-1c");
+  const statsPersentageStaticBitrix = document.querySelector(".stats__text-persentage-static-bitrix");
 
-// считает общее количество пациентов из data
-function stats_radial_graph_calcWholeSum(data) {
-  let sum = null;
-  data.forEach(value => {
-    sum += value;
-  });
-  return sum;
-}
-function stats_radial_graph_getOrCreateTooltip(chart) {
-  let tooltipEl = stats_radial_graph_ctx.parentNode.querySelector(".hero__container-tooltip");
-  if (!tooltipEl) {
-    tooltipEl = document.createElement("div");
-    tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
-    tooltipEl.style.borderRadius = "100%";
-    tooltipEl.style.color = "white";
-    tooltipEl.style.opacity = 1;
-    tooltipEl.style.pointerEvents = "none";
-    tooltipEl.style.position = "absolute";
-    tooltipEl.style.transform = "translate(-50%, 0)";
-    tooltipEl.style.transition = "all .1s ease";
-    const table = document.createElement("div");
-    table.style.margin = "0px";
-    tooltipEl.appendChild(table);
-    chart.canvas.parentNode.appendChild(tooltipEl);
-  }
-  return tooltipEl;
-}
-function stats_radial_graph_externalTooltipHandler(context) {
-  // Tooltip Element
-  const {
-    chart,
-    tooltip
-  } = context;
-  const tooltipEl = stats_radial_graph_getOrCreateTooltip(chart);
+  // общая сумма сделок 1с
+  const count1cPersent = Math.round(statsRadialData.count1c * 100 / calcWholeSum(Object.values(statsRadialData)));
+  statsCountStatic1c.innerHTML = statsRadialData.count1c + " руб.";
+  statsPersentageStatic1c.innerHTML = count1cPersent + "%";
 
-  // Hide if no tooltip
-  if (tooltip.opacity === 0) {
-    tooltipEl.style.opacity = 0;
-    return;
-  }
+  // общая сумма сделок b24
+  statsCountStaticBitrix.innerHTML = statsRadialData.bitrix + " руб.";
+  statsPersentageStaticBitrix.innerHTML = 100 - count1cPersent + "%";
+  const statsRadialChart = new Chart(ctx, config);
 
-  // Set Text
-  if (tooltip.body) {
-    const titleLines = tooltip.title || [];
-    const bodyLines = tooltip.body.map(b => b.lines);
-    const tableHead = document.createElement("div");
-    tableHead.classList = "hero__header-tooltip";
-    titleLines.forEach((title, i) => {
-      const colors = tooltip.labelColors[i];
-      const span = document.createElement("div");
-      span.classList = "hero__color-tooltip";
-      span.style.background = colors.backgroundColor;
-      span.style.borderColor = colors.borderColor;
-      const tr = document.createElement("div");
-      tr.style.borderWidth = 0;
-      const th = document.createElement("div");
-      th.style.borderWidth = 0;
-      const text = document.createTextNode(title);
-      tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
-      th.appendChild(text);
-      tr.appendChild(th);
-      tableHead.appendChild(span);
-      tableHead.appendChild(tr);
+  // считает общее количество пациентов из data
+  function calcWholeSum(data) {
+    let sum = null;
+    data.forEach(value => {
+      sum += value;
     });
-    const tableBody = document.createElement("div");
-    tableBody.classList = "hero__body-tooltip";
-    bodyLines.forEach((body, i) => {
-      const tr = document.createElement("div");
-      tr.innerHTML = body + " руб.";
-      const foundedData = stats_radial_graph_statsDataKeys.find(element => {
-        element == tooltip.title[i];
-        return element;
-      });
-      tableBody.appendChild(tr);
-    });
-    const tableRoot = tooltipEl.querySelector("div");
-    tableRoot.classList = "hero__content-tooltip";
+    return sum;
+  }
+  function getOrCreateTooltip(chart) {
+    let tooltipEl = ctx.parentNode.querySelector(".hero__container-tooltip");
+    if (!tooltipEl) {
+      tooltipEl = document.createElement("div");
+      tooltipEl.style.background = "rgba(0, 0, 0, 0.7)";
+      tooltipEl.style.borderRadius = "100%";
+      tooltipEl.style.color = "white";
+      tooltipEl.style.opacity = 1;
+      tooltipEl.style.pointerEvents = "none";
+      tooltipEl.style.position = "absolute";
+      tooltipEl.style.transform = "translate(-50%, 0)";
+      tooltipEl.style.transition = "all .1s ease";
+      const table = document.createElement("div");
+      table.style.margin = "0px";
+      tooltipEl.appendChild(table);
+      chart.canvas.parentNode.appendChild(tooltipEl);
+    }
+    return tooltipEl;
+  }
+  function externalTooltipHandler(context) {
+    // Tooltip Element
+    const {
+      chart,
+      tooltip
+    } = context;
+    const tooltipEl = getOrCreateTooltip(chart);
 
-    // Remove old children
-    while (tableRoot.firstChild) {
-      tableRoot.firstChild.remove();
+    // Hide if no tooltip
+    if (tooltip.opacity === 0) {
+      tooltipEl.style.opacity = 0;
+      return;
     }
 
-    // Add new children
-    tableRoot.appendChild(tableHead);
-    tableRoot.appendChild(tableBody);
+    // Set Text
+    if (tooltip.body) {
+      const titleLines = tooltip.title || [];
+      const bodyLines = tooltip.body.map(b => b.lines);
+      const tableHead = document.createElement("div");
+      tableHead.classList = "hero__header-tooltip";
+      titleLines.forEach((title, i) => {
+        const colors = tooltip.labelColors[i];
+        const span = document.createElement("div");
+        span.classList = "hero__color-tooltip";
+        span.style.background = colors.backgroundColor;
+        span.style.borderColor = colors.borderColor;
+        const tr = document.createElement("div");
+        tr.style.borderWidth = 0;
+        const th = document.createElement("div");
+        th.style.borderWidth = 0;
+        const text = document.createTextNode(title);
+        tooltipEl.style.border = `1px solid ${colors.backgroundColor}`;
+        th.appendChild(text);
+        tr.appendChild(th);
+        tableHead.appendChild(span);
+        tableHead.appendChild(tr);
+      });
+      const tableBody = document.createElement("div");
+      tableBody.classList = "hero__body-tooltip";
+      bodyLines.forEach((body, i) => {
+        const tr = document.createElement("div");
+        tr.innerHTML = body + " руб.";
+        const foundedData = statsDataKeys.find(element => {
+          element == tooltip.title[i];
+          return element;
+        });
+        tableBody.appendChild(tr);
+      });
+      const tableRoot = tooltipEl.querySelector("div");
+      tableRoot.classList = "hero__content-tooltip";
+
+      // Remove old children
+      while (tableRoot.firstChild) {
+        tableRoot.firstChild.remove();
+      }
+
+      // Add new children
+      tableRoot.appendChild(tableHead);
+      tableRoot.appendChild(tableBody);
+    }
+    const {
+      offsetLeft: positionX,
+      offsetTop: positionY
+    } = chart.canvas;
+
+    // Display, position, and set styles for font
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.left = positionX + tooltip.caretX + "px";
+    tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
   }
-  const {
-    offsetLeft: positionX,
-    offsetTop: positionY
-  } = chart.canvas;
-
-  // Display, position, and set styles for font
-  tooltipEl.style.opacity = 1;
-  tooltipEl.style.left = positionX + tooltip.caretX + "px";
-  tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
-}
-function format(str) {
-  const s = str.length;
-  const chars = str.split("");
-  const strWithSpaces = chars.reduceRight((acc, char, i) => {
-    const spaceOrNothing = (s - i) % 3 === 0 ? " " : "";
-    return spaceOrNothing + char + acc;
-  }, "");
-  return strWithSpaces[0] === " " ? strWithSpaces.slice(1) : strWithSpaces;
-}
-;// CONCATENATED MODULE: ./src/js/components/theme-change.js
-
-
-
-
-const switchBtn = document.querySelector(".switch");
-const root = document.querySelector(":root");
-const heroTitle = document.querySelector(".hero__title");
-const statsCountStatic1c = document.querySelector(".stats__text-static-1c");
-const statsCountStaticBitrix = document.querySelector(".stats__text-static-bitrix");
-const statsPersentageStatic1c = document.querySelector(".stats__text-persentage-static-1c");
-const statsPersentageStaticBitrix = document.querySelector(".stats__text-persentage-static-bitrix");
-const contactsLabelBitrix = document.querySelector(".contacts__label-bitrix");
-const contactsLabel1c = document.querySelector(".contacts__label-1с");
-const contactSliders = document.querySelectorAll(".contacts__container-slider");
-const statsButtonsContainers = document.querySelectorAll(".stats__block-buttons");
-const heroChart1cContainer = document.querySelector(".hero__container-graph-1c");
-const heroChartBitrixContainer = document.querySelector(".hero__container-graph-bitrix");
-const statsConversyPersent1c = document.querySelector(".stats__text-persent-1c");
-const statsConversyCount1c = document.querySelector(".stats__text-count-1c");
-const statsConversyPersentb24 = document.querySelector(".stats__text-persent-b24");
-const statsConversyCountb24 = document.querySelector(".stats__text-count-b24");
-const statsConversyPersentEmpty = document.querySelector(".stats__text-persent-empty");
-const statsConversyCountEpmty = document.querySelector(".stats__text-count-empty");
-const heroDate1c = document.querySelector(".hero__date-1c");
-const heroDateb24 = document.querySelector(".hero__date-b24");
-let currentTheme = "theme1c";
-const themes = {
-  theme1c: {
-    "--orange-color": "#e15335",
-    "--blue-color": "#299b9c"
-  },
-  bitrix: {
-    "--orange-color": "#299b9c",
-    "--blue-color": "#e15335"
+  function format(str) {
+    const s = str.length;
+    const chars = str.split("");
+    const strWithSpaces = chars.reduceRight((acc, char, i) => {
+      const spaceOrNothing = (s - i) % 3 === 0 ? " " : "";
+      return spaceOrNothing + char + acc;
+    }, "");
+    return strWithSpaces[0] === " " ? strWithSpaces.slice(1) : strWithSpaces;
   }
-};
-switchBtn.addEventListener("change", () => {
-  changeTheme();
-});
-function changeTheme() {
-  if (currentTheme == "theme1c") {
-    Object.entries(themes.bitrix).forEach(_ref => {
-      let [key, value] = _ref;
-      root.style.setProperty(key, value);
-    });
-    changeThemeContent();
-    currentTheme = "bitrix";
-  } else {
-    Object.entries(themes.theme1c).forEach(_ref2 => {
-      let [key, value] = _ref2;
-      root.style.setProperty(key, value);
-    });
-    changeThemeContent();
-    currentTheme = "theme1c";
-  }
-}
-function changeThemeContent() {
-  heroList1c.classList.toggle("hero__list-visible");
-  heroChart1cContainer.classList.toggle("hero__container-graph-visible");
-  heroListBitrix.classList.toggle("hero__list-visible");
-  heroChartBitrixContainer.classList.toggle("hero__container-graph-visible");
-  contactSliders.forEach(slider => {
-    slider.classList.toggle("contacts__container-slider-visible");
-  });
-  statsButtonsContainers.forEach(container => {
-    container.classList.toggle("stats__block-buttons-visible");
-  });
-  heroDate1c.classList.toggle("hero__date-hidden");
-  heroDateb24.classList.toggle("hero__date-hidden");
-  changeText();
-}
-function changeText() {
-  if (currentTheme == "theme1c") {
-    heroTitle.innerHTML = "Конверсия приемов";
-    contactsLabel1c.innerHTML = "Б24";
-    contactsLabelBitrix.innerHTML = "1C";
-  } else {
-    heroTitle.innerHTML = "Конверсия лидов";
-    contactsLabelBitrix.innerHTML = "Б24";
-    contactsLabel1c.innerHTML = "1C";
-  }
-}
-
-// конверсия лидов 1c
-const count1cPersentCoversy = Math.round(statsRadialDataConversy.count1c * 100 / stats_radial_graph_calcWholeSum(Object.values(statsRadialDataConversy)));
-statsConversyCount1c.innerHTML = statsRadialDataConversy.count1c + " пац.";
-statsConversyPersent1c.innerHTML = count1cPersentCoversy + "%";
-
-// конверсия лидов b24
-statsConversyCountb24.innerHTML = statsRadialDataConversy.bitrix + " пац.";
-statsConversyPersentb24.innerHTML = 100 - count1cPersentCoversy + "%";
-
-// общая сумма сделок 1с
-const count1cPersent = Math.round(statsRadialData.count1c * 100 / stats_radial_graph_calcWholeSum(Object.values(statsRadialData)));
-statsCountStatic1c.innerHTML = statsRadialData.count1c + " руб.";
-statsPersentageStatic1c.innerHTML = count1cPersent + "%";
-
-// общая сумма сделок b24
-statsCountStaticBitrix.innerHTML = statsRadialData.bitrix + " руб.";
-statsPersentageStaticBitrix.innerHTML = 100 - count1cPersent + "%";
-
-// без приема
-statsConversyCountEpmty.innerHTML = statsRadiaDataConversyEmpty.count + " " + declOfNum(statsRadiaDataConversyEmpty.count, ["лид", "лида", "лидов"]);
-statsConversyPersentEmpty.innerHTML = statsRadiaDataConversyEmpty.persent + "%";
-function declOfNum(n, text_forms) {
-  n = Math.abs(n) % 100;
-  var n1 = n % 10;
-  if (n > 10 && n < 20) {
-    return text_forms[2];
-  }
-  if (n1 > 1 && n1 < 5) {
-    return text_forms[1];
-  }
-  if (n1 == 1) {
-    return text_forms[0];
-  }
-  return text_forms[2];
+  return statsRadialChart;
 }
 ;// CONCATENATED MODULE: ./node_modules/ssr-window/ssr-window.esm.js
 /**
@@ -33021,7 +32942,7 @@ function prop(props, value) {
   return this;
 }
 
-function dom7_esm_data(key, value) {
+function data(key, value) {
   let el;
 
   if (typeof value === 'undefined') {
@@ -43145,7 +43066,208 @@ function EffectCards({
 ;// CONCATENATED MODULE: ./src/js/components/contacts-slider-1c.js
 
 core.use([Pagination, Navigation, Controller]);
-const contacts_slider_1c_data1c = [{
+function drawSlider1c(data) {
+  // данные для отрисовки в слайдере
+  const data1c = data;
+  const contactsValueSpan = document.querySelector(".contacts__value-1c");
+  contactsValueSpan.innerHTML = data1c.length;
+
+  // верстка внутреннего элемента списка
+  const contactsItemInner = `
+		<span class="contacts__name"></span>
+		<span class="contacts__phone" data-mask='XX (XXX) XXX XX XX'></span>
+		<span class="contacts__deals"></span>
+	`;
+  const list = document.querySelector(`.contacts__list-1c`);
+  const formattedData = [];
+  const chunkSize = 10;
+  for (let i = 0; i < data1c.length; i += chunkSize) {
+    const chunk = data1c.slice(i, i + chunkSize);
+    formattedData.push(chunk);
+  }
+  formattedData.forEach(array => {
+    // создаем новый слайд
+    let contactsSlide = document.createElement("div");
+    contactsSlide.classList = `swiper-slide swiper-slide-1c`;
+    array.forEach(row => {
+      // создем новый айтем
+      let contactsItem = document.createElement("div");
+      contactsItem.classList = "contacts__item title title__h4";
+      contactsItem.innerHTML = contactsItemInner;
+
+      // изменяем контент внутри
+      const phone = contactsItem.querySelector(".contacts__phone");
+      contactsItem.querySelector(".contacts__name").innerHTML = row.name;
+      phone.innerHTML = formatByMask(phone.getAttribute("data-mask"), row.phone);
+      contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
+
+      // засовываем в лист
+      contactsSlide.appendChild(contactsItem);
+    });
+    list.appendChild(contactsSlide);
+  });
+  const swiperThumbs1c = new core(document.querySelector(`.swiper-thumbs-1c`), {
+    slidesPerView: 7,
+    speed: 500
+  });
+  const slider1c = new core(document.querySelector(`.contacts__container-slider-1c`), {
+    slidesPerView: 1,
+    spaceBetween: 30,
+    slideClass: `swiper-slide-1c`,
+    speed: 500,
+    pagination: {
+      el: ".contacts__pagination-1c",
+      clickable: true,
+      bulletActiveClass: "contacts__bullet-active",
+      renderBullet: function (index, className) {
+        return `<span class="swiper-slide contacts__bullet ${className}">${index + 1}</span>`;
+      }
+    },
+    navigation: {
+      nextEl: ".contacts__button-next-1c",
+      prevEl: ".contacts__button-prev-1c"
+    },
+    controller: {
+      by: "slide",
+      control: swiperThumbs1c
+    }
+  });
+  return {
+    mainSlider: slider1c,
+    thumbsSlider: swiperThumbs1c
+  };
+}
+function formatByMask(mask, value) {
+  if (value.length >= 13) {
+    return value;
+  }
+  if (value.length < 12) {
+    let maskArray = mask.split("");
+    maskArray.shift();
+    mask = maskArray.join("");
+  }
+  let formattedValue = mask;
+  const maskCharCount = [...mask].reduce((result, chr) => {
+    if (chr === "X") result++;
+    return result;
+  }, 0);
+  for (let i = 0; i < maskCharCount; i++) {
+    if (value[i]) formattedValue = formattedValue.replace("X", value[i]);
+  }
+  return formattedValue;
+}
+;// CONCATENATED MODULE: ./src/js/components/contacts-slider-bitrix.js
+
+core.use([Pagination, Navigation, Controller]);
+function drawSliderBitrix(data) {
+  // данные для отрисовки в слайдере
+  const bitrixData = data;
+  const contactsValueSpan = document.querySelector(".contacts__value-bitrix");
+  contactsValueSpan.innerHTML = bitrixData.length;
+
+  // верстка внутреннего элемента списка
+  const contactsItemInner = `
+		<span class="contacts__name"></span>
+		<span class="contacts__phone" data-mask='XX (XXX) XXX XX XX'></span>
+		<span class="contacts__deals"></span>
+	`;
+  const list = document.querySelector(`.contacts__list-bitrix`);
+  const formattedData = [];
+  const chunkSize = 10;
+  for (let i = 0; i < bitrixData.length; i += chunkSize) {
+    const chunk = bitrixData.slice(i, i + chunkSize);
+    formattedData.push(chunk);
+  }
+  formattedData.forEach(array => {
+    // создаем новый слайд
+    let contactsSlide = document.createElement("div");
+    contactsSlide.classList = `swiper-slide swiper-slide-bitrix`;
+    array.forEach(row => {
+      // создем новый айтем
+      let contactsItem = document.createElement("div");
+      contactsItem.classList = "contacts__item title title__h4";
+      contactsItem.innerHTML = contactsItemInner;
+
+      // изменяем контент внутри
+      const phone = contactsItem.querySelector(".contacts__phone");
+      contactsItem.querySelector(".contacts__name").innerHTML = row.name;
+      phone.innerHTML = contacts_slider_bitrix_formatByMask(phone.getAttribute("data-mask"), row.phone);
+      contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
+
+      // засовываем в лист
+      contactsSlide.appendChild(contactsItem);
+    });
+    list.appendChild(contactsSlide);
+  });
+  const swiperThumbsBitrix = new core(document.querySelector(`.swiper-thumbs-bitrix`), {
+    slidesPerView: 7,
+    speed: 500
+  });
+  const sliderBitrix = new core(document.querySelector(`.contacts__container-slider-bitrix`), {
+    slidesPerView: 1,
+    spaceBetween: 30,
+    slideClass: `swiper-slide-bitrix`,
+    speed: 500,
+    pagination: {
+      el: ".contacts__pagination-bitrix",
+      clickable: true,
+      bulletActiveClass: "contacts__bullet-active",
+      renderBullet: function (index, className) {
+        return `<span class="swiper-slide contacts__bullet ${className}">${index + 1}</span>`;
+      }
+    },
+    navigation: {
+      nextEl: ".contacts__button-next-bitrix",
+      prevEl: ".contacts__button-prev-bitrix"
+    },
+    controller: {
+      by: "container",
+      control: swiperThumbsBitrix
+    }
+  });
+  return {
+    mainSlider: sliderBitrix,
+    thumbsSlider: swiperThumbsBitrix
+  };
+}
+function contacts_slider_bitrix_formatByMask(mask, value) {
+  if (value.length >= 13) {
+    return value;
+  }
+  if (value.length < 12) {
+    let maskArray = mask.split("");
+    maskArray.shift();
+    mask = maskArray.join("");
+  }
+  let formattedValue = mask;
+  const maskCharCount = [...mask].reduce((result, chr) => {
+    if (chr === "X") result++;
+    return result;
+  }, 0);
+  for (let i = 0; i < maskCharCount; i++) {
+    if (value[i]) formattedValue = formattedValue.replace("X", value[i]);
+  }
+  return formattedValue;
+}
+// EXTERNAL MODULE: ./src/js/components/date-buttons.js
+var date_buttons = __webpack_require__(477);
+// EXTERNAL MODULE: ./src/js/components/buttons-height.js
+var buttons_height = __webpack_require__(12);
+;// CONCATENATED MODULE: ./src/js/components/graphs-data-controller.js
+
+
+
+
+
+
+
+
+// Отсюда брать значение дат на странице битрикса
+const startDateSpanB24 = document.querySelector(".hero__date-b24 .hero__date-text-start");
+const endDateSpanB24 = document.querySelector(".hero__date-b24 .hero__date-text-end");
+
+// данные для makeContent1c
+const data1c = [{
   name: "Петров Валерий Александрович",
   phone: "+79080567822",
   deals: 5
@@ -43970,97 +44092,63 @@ const contacts_slider_1c_data1c = [{
   phone: "89060230760",
   deals: 12
 }];
-const contactsValueSpan = document.querySelector(".contacts__value-1c");
-contactsValueSpan.innerHTML = contacts_slider_1c_data1c.length;
-
-// верстка внутреннего элемента списка
-const contactsItemInner = `
-		<span class="contacts__name"></span>
-		<span class="contacts__phone" data-mask='XX (XXX) XXX XX XX'></span>
-		<span class="contacts__deals"></span>
-	`;
-const list = document.querySelector(`.contacts__list-1c`);
-const formattedData = [];
-const chunkSize = 10;
-for (let i = 0; i < contacts_slider_1c_data1c.length; i += chunkSize) {
-  const chunk = contacts_slider_1c_data1c.slice(i, i + chunkSize);
-  formattedData.push(chunk);
+const heroData1c = [{
+  label: "1 прием",
+  persentage: "18%",
+  count: 50
+}, {
+  label: "2 прием",
+  persentage: "30%",
+  count: 3
+}, {
+  label: "3 приема",
+  persentage: "5%",
+  count: 44
+}, {
+  label: "4 приема",
+  persentage: "11%",
+  count: 112
+}, {
+  label: "5 приемов",
+  persentage: "20%",
+  count: 23
+}, {
+  label: "6 приемов",
+  persentage: "12%",
+  count: 35
+}, {
+  label: "7 приемов",
+  persentage: "4%",
+  count: 32
+}, {
+  label: "8 приемов",
+  persentage: "5%",
+  count: 98
+}, {
+  label: "9 приемов",
+  persentage: "12%",
+  count: 23
+}, {
+  label: "10+ приемов",
+  persentage: "0.5%",
+  count: 3
+}];
+let heroRadialChart1c = undefined;
+let contactsSlider1cMain = undefined;
+let contactsSlider1cThumbs = undefined;
+const heroList1c = document.querySelector(".hero__list-1c");
+function makeContent1c(data1c, heroData1c) {
+  if (heroRadialChart1c !== undefined) {
+    heroRadialChart1c.destroy();
+  }
+  if (heroList1c.innerHTML !== "") {
+    heroList1c.innerHTML = "";
+  }
+  heroRadialChart1c = drawHeroRadial1c(heroData1c);
+  redrawSlider1c(data1c);
 }
-formattedData.forEach(array => {
-  // создаем новый слайд
-  let contactsSlide = document.createElement("div");
-  contactsSlide.classList = `swiper-slide swiper-slide-1c`;
-  array.forEach(row => {
-    // создем новый айтем
-    let contactsItem = document.createElement("div");
-    contactsItem.classList = "contacts__item title title__h4";
-    contactsItem.innerHTML = contactsItemInner;
 
-    // изменяем контент внутри
-    const phone = contactsItem.querySelector(".contacts__phone");
-    contactsItem.querySelector(".contacts__name").innerHTML = row.name;
-    phone.innerHTML = formatByMask(phone.getAttribute("data-mask"), row.phone);
-    contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
-
-    // засовываем в лист
-    contactsSlide.appendChild(contactsItem);
-  });
-  list.appendChild(contactsSlide);
-});
-const swiperThumbs1c = new core(document.querySelector(`.swiper-thumbs-1c`), {
-  slidesPerView: 7,
-  speed: 500,
-  navigation: {
-    nextEl: ".contacts__button-next-1c",
-    prevEl: ".contacts__button-prev-1c"
-  }
-});
-const slider1c = new core(document.querySelector(`.contacts__container-slider-1c`), {
-  slidesPerView: 1,
-  spaceBetween: 30,
-  slideClass: `swiper-slide-1c`,
-  speed: 500,
-  pagination: {
-    el: ".contacts__pagination-1c",
-    clickable: true,
-    bulletActiveClass: "contacts__bullet-active",
-    renderBullet: function (index, className) {
-      return `<span class="swiper-slide contacts__bullet ${className}">${index + 1}</span>`;
-    }
-  },
-  navigation: {
-    nextEl: ".contacts__button-next-1c",
-    prevEl: ".contacts__button-prev-1c"
-  },
-  controller: {
-    by: "container",
-    control: swiperThumbs1c
-  }
-});
-function formatByMask(mask, value) {
-  if (value.length >= 13) {
-    return value;
-  }
-  if (value.length < 12) {
-    let maskArray = mask.split("");
-    maskArray.shift();
-    mask = maskArray.join("");
-  }
-  let formattedValue = mask;
-  const maskCharCount = [...mask].reduce((result, chr) => {
-    if (chr === "X") result++;
-    return result;
-  }, 0);
-  for (let i = 0; i < maskCharCount; i++) {
-    if (value[i]) formattedValue = formattedValue.replace("X", value[i]);
-  }
-  return formattedValue;
-}
-;// CONCATENATED MODULE: ./src/js/components/contacts-slider-bitrix.js
-
-core.use([Pagination, Navigation, Controller]);
-
-// данные для отрисовки при теме bitrix
+// данные для makeContentBitrix
 const bitrixData = [{
   name: "Петров Валерий Александрович",
   phone: "+79080567822",
@@ -44382,98 +44470,182 @@ const bitrixData = [{
   phone: "+7 (908) 056 78 22",
   deals: 0
 }];
-const contacts_slider_bitrix_contactsValueSpan = document.querySelector(".contacts__value-bitrix");
-contacts_slider_bitrix_contactsValueSpan.innerHTML = bitrixData.length;
-
-// верстка внутреннего элемента списка
-const contacts_slider_bitrix_contactsItemInner = `
-		<span class="contacts__name"></span>
-		<span class="contacts__phone" data-mask='XX (XXX) XXX XX XX'></span>
-		<span class="contacts__deals"></span>
-	`;
-const contacts_slider_bitrix_list = document.querySelector(`.contacts__list-bitrix`);
-const contacts_slider_bitrix_formattedData = [];
-const contacts_slider_bitrix_chunkSize = 10;
-for (let i = 0; i < bitrixData.length; i += contacts_slider_bitrix_chunkSize) {
-  const chunk = bitrixData.slice(i, i + contacts_slider_bitrix_chunkSize);
-  contacts_slider_bitrix_formattedData.push(chunk);
-}
-contacts_slider_bitrix_formattedData.forEach(array => {
-  // создаем новый слайд
-  let contactsSlide = document.createElement("div");
-  contactsSlide.classList = `swiper-slide swiper-slide-bitrix`;
-  array.forEach(row => {
-    // создем новый айтем
-    let contactsItem = document.createElement("div");
-    contactsItem.classList = "contacts__item title title__h4";
-    contactsItem.innerHTML = contacts_slider_bitrix_contactsItemInner;
-
-    // изменяем контент внутри
-    const phone = contactsItem.querySelector(".contacts__phone");
-    contactsItem.querySelector(".contacts__name").innerHTML = row.name;
-    phone.innerHTML = contacts_slider_bitrix_formatByMask(phone.getAttribute("data-mask"), row.phone);
-    contactsItem.querySelector(".contacts__deals").innerHTML = row.deals;
-
-    // засовываем в лист
-    contactsSlide.appendChild(contactsItem);
-  });
-  contacts_slider_bitrix_list.appendChild(contactsSlide);
-});
-const swiperThumbsBitrix = new core(document.querySelector(`.swiper-thumbs-bitrix`), {
-  slidesPerView: 7,
-  speed: 500,
-  navigation: {
-    nextEl: ".contacts__button-next-bitrix",
-    prevEl: ".contacts__button-prev-bitrix"
+const heroDataBitrix = [{
+  label: "1 прием",
+  persentage: "18%",
+  count: 150
+}, {
+  label: "2 приема",
+  persentage: "30%",
+  count: 6
+}, {
+  label: "3 приема",
+  persentage: "5%",
+  count: 24
+}, {
+  label: "4 приема",
+  persentage: "11%",
+  count: 112
+}, {
+  label: "5 приемов",
+  persentage: "20%",
+  count: 43
+}, {
+  label: "6 приемов",
+  persentage: "12%",
+  count: 35
+}, {
+  label: "7 приемов",
+  persentage: "4%",
+  count: 32
+}, {
+  label: "8 приемов",
+  persentage: "5%",
+  count: 98
+}, {
+  label: "9 приемов",
+  persentage: "12%",
+  count: 32
+}, {
+  label: "10+ приемов",
+  persentage: "0.5%",
+  count: 12
+}];
+let heroRadialChartBitrix = undefined;
+let contactsSliderBitrixMain = undefined;
+let contactsSliderBitrixThumbs = undefined;
+const heroListBitrix = document.querySelector(".hero__list-bitrix");
+function makeContentBitrix(bitrixData, heroDataBitrixContacts) {
+  if (heroRadialChartBitrix !== undefined) {
+    heroRadialChartBitrix.destroy();
   }
-});
-const sliderBitrix = new core(document.querySelector(`.contacts__container-slider-bitrix`), {
-  slidesPerView: 1,
-  spaceBetween: 30,
-  slideClass: `swiper-slide-bitrix`,
-  speed: 500,
-  pagination: {
-    el: ".contacts__pagination-bitrix",
-    clickable: true,
-    bulletActiveClass: "contacts__bullet-active",
-    renderBullet: function (index, className) {
-      return `<span class="swiper-slide contacts__bullet ${className}">${index + 1}</span>`;
+  if (heroListBitrix.innerHTML !== "") {
+    heroListBitrix.innerHTML = "";
+  }
+  heroRadialChartBitrix = drawHeroRadialBitrix(heroDataBitrixContacts);
+  redrawSliderBitrix(bitrixData);
+}
+
+// данные для статичных диаграмм
+const statsRadialDataConversy = {
+  count1c: 50,
+  bitrix: 79
+};
+const statsRadiaDataConversyEmpty = {
+  count: 22,
+  persent: 10
+};
+let statsRadialConversyChart = (/* unused pure expression or super */ null && (undefined));
+function drawConversyChart(statsRadialDataConversy, statsRadiaDataConversyEmpty) {
+  if (!statsRadialDataConversy) {
+    console.log("statsRadialDataConversy не получена");
+    return;
+  }
+  if (!statsRadiaDataConversyEmpty) {
+    console.log("statsRadiaDataConversyEmpty не получена");
+    return;
+  }
+  if (statsRadialConversyChart !== undefined) {
+    statsRadialConversyChart.destroy();
+  }
+  statsRadialConversyChart = drawStatsRadialConversy(statsRadialDataConversy, statsRadiaDataConversyEmpty);
+}
+const statsRadialData = {
+  count1c: 0,
+  bitrix: 1500000
+};
+let statsRadialChart = (/* unused pure expression or super */ null && (undefined));
+function drawSummChart(statsRadialData) {
+  if (!statsRadialData) {
+    console.log("statsRadialData не получена");
+    return;
+  }
+  if (statsRadialChart !== undefined) {
+    statsRadialChart.destroy();
+  }
+  statsRadialChart = drawStatsRadial(statsRadialData);
+}
+
+// что нужно сделать что бы создать страницу 1с ↓↓↓
+// makeContent1c(data1c, heroData1c);
+
+// что нужно сделать что бы создать страницу bitrix ↓↓↓
+// makeContentBitrix(bitrixData, heroDataBitrix);
+
+// что нужно сделать что бы создать секцию графиков со статичным контентом
+// drawConversyChart(statsRadialDataConversy, statsRadiaDataConversyEmpty);
+// drawSummChart(statsRadialData);
+
+const generateButton1c = document.querySelector(".stats__button-generate-1c");
+if (generateButton1c) {
+  generateButton1c.addEventListener("click", () => {
+    if (generateButton1c.classList.contains("blocked")) {
+      return;
     }
-  },
-  navigation: {
-    nextEl: ".contacts__button-next-bitrix",
-    prevEl: ".contacts__button-prev-bitrix"
-  },
-  controller: {
-    by: "container",
-    control: swiperThumbsBitrix
-  }
-});
-function contacts_slider_bitrix_formatByMask(mask, value) {
-  if (value.length >= 13) {
-    return value;
-  }
-  if (value.length < 12) {
-    let maskArray = mask.split("");
-    maskArray.shift();
-    mask = maskArray.join("");
-  }
-  let formattedValue = mask;
-  const maskCharCount = [...mask].reduce((result, chr) => {
-    if (chr === "X") result++;
-    return result;
-  }, 0);
-  for (let i = 0; i < maskCharCount; i++) {
-    if (value[i]) formattedValue = formattedValue.replace("X", value[i]);
-  }
-  return formattedValue;
+    makeContent1c(data1c, heroData1c);
+  });
 }
-// EXTERNAL MODULE: ./src/js/components/file-input.js
-var file_input = __webpack_require__(742);
-// EXTERNAL MODULE: ./src/js/components/data-buttons.js
-var data_buttons = __webpack_require__(681);
-// EXTERNAL MODULE: ./src/js/components/buttons-height.js
-var buttons_height = __webpack_require__(12);
+const generateButtonBitrix = document.querySelector(".stats__button-generate-bitrix");
+if (generateButtonBitrix) {
+  generateButtonBitrix.addEventListener("click", () => {
+    makeContentBitrix(bitrixData, heroDataBitrix);
+  });
+}
+
+// перерисовываем слайдер с контактами 1с
+function redrawSlider1c(data1c) {
+  if (contactsSlider1cMain && contactsSlider1cThumbs) {
+    contactsSlider1cMain.$wrapperEl[0].innerHTML = "";
+    document.querySelector(".contacts__pagination-1c").innerHTML = "";
+    contactsSlider1cMain.destroy();
+    contactsSlider1cThumbs.destroy();
+  }
+  let slidersObj = drawSlider1c(data1c);
+  contactsSlider1cMain = slidersObj.mainSlider;
+  contactsSlider1cThumbs = slidersObj.mainSlider;
+}
+
+// перерисовываем слайдер с контактами битрикса
+function redrawSliderBitrix(dataBitrix) {
+  if (contactsSliderBitrixMain && contactsSliderBitrixThumbs) {
+    contactsSliderBitrixMain.$wrapperEl[0].innerHTML = [];
+    document.querySelector(".contacts__pagination-bitrix").innerHTML = "";
+    contactsSliderBitrixMain.destroy();
+    contactsSliderBitrixThumbs.destroy();
+  }
+  let slidersObj = drawSliderBitrix(dataBitrix);
+  contactsSliderBitrixMain = slidersObj.mainSlider;
+  contactsSliderBitrixThumbs = slidersObj.mainSlider;
+}
+
+// FILE INPUT SCRIPT
+const fileInputButton = document.getElementById("fileInputButton");
+const fileInput = document.getElementById("fileInput");
+if (fileInputButton !== null && fileInput !== null) {
+  fileInputButton.addEventListener("click", () => {
+    fileInput.click();
+  });
+  fileInput.addEventListener("change", () => {
+    generateButton1c.classList.remove("blocked");
+    const fileExtension = fileInput.files[0].name.split(".").pop();
+    if (fileExtension == "xls") {
+      let formData = new FormData();
+      formData.append("userUploadedFile", fileInput.files[0]);
+      // axios
+      // 	.post("", formData, {
+      // 		headers: {
+      // 			"Content-Type": "multipart/form-data",
+      // 		},
+      // 	})
+      // 	.then(function () {
+      // 		console.log("SUCCESS!!");
+      // 	})
+      // 	.catch(function () {
+      // 		console.log("FAILURE!!");
+      // 	});
+    }
+  });
+}
 ;// CONCATENATED MODULE: ./src/js/_components.js
 // import "./components/get-graphs-data";
 

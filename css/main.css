@@ -118,6 +118,9 @@ section:not(:last-child) {
   height: 1px;
   clip: rect(0 0 0 0)
 }
+.blocked {
+  cursor: not-allowed
+}
 .title {
   margin: 0;
   color: var(--black-color)
