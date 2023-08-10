@@ -84,3 +84,7 @@ section {
 	height: 1px;
 	clip: rect(0 0 0 0);
 }
+
+.blocked {
+	cursor: not-allowed;
+}

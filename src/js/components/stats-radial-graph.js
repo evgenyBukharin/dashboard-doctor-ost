@@ -210,4 +210,5 @@ export function drawStatsRadial(externalData) {
 
 		return strWithSpaces[0] === " " ? strWithSpaces.slice(1) : strWithSpaces;
 	}
+	return statsRadialChart;
 }

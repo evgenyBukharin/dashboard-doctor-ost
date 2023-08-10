@@ -48,10 +48,6 @@ export function drawSlider1c(data) {
 	const swiperThumbs1c = new Swiper(document.querySelector(`.swiper-thumbs-1c`), {
 		slidesPerView: 7,
 		speed: 500,
-		navigation: {
-			nextEl: ".contacts__button-next-1c",
-			prevEl: ".contacts__button-prev-1c",
-		},
 	});
 
 	const slider1c = new Swiper(document.querySelector(`.contacts__container-slider-1c`), {
@@ -72,10 +68,11 @@ export function drawSlider1c(data) {
 			prevEl: ".contacts__button-prev-1c",
 		},
 		controller: {
-			by: "container",
+			by: "slide",
 			control: swiperThumbs1c,
 		},
 	});
+	return { mainSlider: slider1c, thumbsSlider: swiperThumbs1c };
 }
 
 function formatByMask(mask, value) {

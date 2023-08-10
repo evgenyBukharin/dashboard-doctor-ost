@@ -267,4 +267,5 @@ export function drawHeroRadialBitrix(data) {
 		tooltipEl.style.left = positionX + tooltip.caretX + "px";
 		tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
 	}
+	return heroChartBitrix;
 }

@@ -227,4 +227,5 @@ export function drawStatsRadialConversy(dataConversy, dataConversyEmpty) {
 		}
 		return text_forms[2];
 	}
+	return statsRadialChart;
 }

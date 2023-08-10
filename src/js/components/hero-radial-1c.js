@@ -263,4 +263,5 @@ export function drawHeroRadial1c(data) {
 		tooltipEl.style.top = positionY + tooltip.caretY - tooltipEl.offsetHeight + "px";
 	}
 	const heroChart1c = new Chart(ctx, config1c);
+	return heroChart1c;
 }

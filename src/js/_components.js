@@ -7,7 +7,6 @@ import "./components/stats-radial-conversy";
 import "./components/stats-radial-graph";
 import "./components/contacts-slider-1c";
 import "./components/contacts-slider-bitrix";
-import "./components/file-input";
 import "./components/date-buttons";
 import "./components/buttons-height";
 import "./components/graphs-data-controller";

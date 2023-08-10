@@ -48,10 +48,6 @@ export function drawSliderBitrix(data) {
 	const swiperThumbsBitrix = new Swiper(document.querySelector(`.swiper-thumbs-bitrix`), {
 		slidesPerView: 7,
 		speed: 500,
-		navigation: {
-			nextEl: ".contacts__button-next-bitrix",
-			prevEl: ".contacts__button-prev-bitrix",
-		},
 	});
 
 	const sliderBitrix = new Swiper(document.querySelector(`.contacts__container-slider-bitrix`), {
@@ -76,6 +72,7 @@ export function drawSliderBitrix(data) {
 			control: swiperThumbsBitrix,
 		},
 	});
+	return { mainSlider: sliderBitrix, thumbsSlider: swiperThumbsBitrix };
 }
 
 function formatByMask(mask, value) {
