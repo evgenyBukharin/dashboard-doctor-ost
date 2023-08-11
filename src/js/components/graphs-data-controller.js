@@ -423,7 +423,11 @@ if (generateButton1c) {
 const generateButtonBitrix = document.querySelector(".stats__button-generate-bitrix");
 if (generateButtonBitrix) {
 	generateButtonBitrix.addEventListener("click", () => {
-		makeContentBitrix(bitrixData, heroDataBitrix);
+		if (startDateSpanB24.innerHTML && endDateSpanB24.innerHTML) {
+			// axios запрос?
+			// .then()
+			makeContentBitrix(bitrixData, heroDataBitrix);
+		}
 	});
 }
 

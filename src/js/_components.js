@@ -10,3 +10,4 @@ import "./components/contacts-slider-bitrix";
 import "./components/date-buttons";
 import "./components/buttons-height";
 import "./components/graphs-data-controller";
+import "./components/loader";
