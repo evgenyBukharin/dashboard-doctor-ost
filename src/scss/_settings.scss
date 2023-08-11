@@ -66,6 +66,8 @@ a {
 
 canvas {
 	overflow: visible;
+	position: relative;
+	z-index: 600;
 }
 
 section {

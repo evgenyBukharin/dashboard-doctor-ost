@@ -6,7 +6,7 @@ import DoughnutLabel from "chartjs-plugin-doughnutlabel-rebourne";
 Chart.register(ChartDataLabels);
 Chart.register(DoughnutLabel);
 
-export function drawHeroRadialBitrix(data) {
+export function drawHeroRadialBitrix(data, oneLeadPrice) {
 	// данные для отрисовки в диаграмме
 	const heroDataBitrix = data;
 
@@ -130,7 +130,7 @@ export function drawHeroRadialBitrix(data) {
 							},
 						},
 						{
-							text: 250,
+							text: oneLeadPrice,
 							font: {
 								size: 24,
 								weight: "500",

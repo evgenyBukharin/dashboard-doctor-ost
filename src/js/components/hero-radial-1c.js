@@ -6,7 +6,7 @@ import DoughnutLabel from "chartjs-plugin-doughnutlabel-rebourne";
 Chart.register(ChartDataLabels);
 Chart.register(DoughnutLabel);
 
-export function drawHeroRadial1c(data) {
+export function drawHeroRadial1c(data, oneLeadPrice) {
 	const ctx = document.getElementById("myChart1c");
 	// export const heroList1c = document.querySelector(".hero__list-1c");
 	const heroList1c = document.querySelector(".hero__list-1c");
@@ -130,7 +130,7 @@ export function drawHeroRadial1c(data) {
 							},
 						},
 						{
-							text: 250,
+							text: oneLeadPrice,
 							font: {
 								size: 24,
 								weight: "500",

@@ -7,16 +7,15 @@ import declOfNum from "../_functions";
 Chart.register(ChartDataLabels);
 Chart.register(DoughnutLabel);
 
-export function drawStatsRadialConversy(dataConversy, dataConversyEmpty) {
+export function drawStatsRadialConversy(dataConversy) {
 	const ctx = document.getElementById("statsRadialConversy");
 
 	// данные которые используются для отрисовки диаграммы и списка
 	const statsRadialDataConversy = dataConversy;
-	const statsRadiaDataConversyEmpty = dataConversyEmpty;
 
 	const statsDataKeys = Object.keys(statsRadialDataConversy);
 
-	const colors = ["#E15335", "#299B9C"];
+	const colors = ["#E15335", "#299B9C", "grey"];
 
 	const data = {
 		labels: [""],
@@ -92,15 +91,19 @@ export function drawStatsRadialConversy(dataConversy, dataConversyEmpty) {
 	statsConversyPersent1c.innerHTML = count1cPersentCoversy + "%";
 
 	// конверсия лидов b24
+	const countb24PersentCoversy = Math.round(
+		(statsRadialDataConversy.bitrix * 100) / calcWholeSum(Object.values(statsRadialDataConversy))
+	);
 	statsConversyCountb24.innerHTML = statsRadialDataConversy.bitrix + " пац.";
-	statsConversyPersentb24.innerHTML = 100 - count1cPersentCoversy + "%";
+	statsConversyPersentb24.innerHTML = countb24PersentCoversy + "%";
 
 	// без приема
+	const countEmptyPersentCoversy = Math.round(
+		(statsRadialDataConversy.empty * 100) / calcWholeSum(Object.values(statsRadialDataConversy))
+	);
 	statsConversyCountEpmty.innerHTML =
-		statsRadiaDataConversyEmpty.count +
-		" " +
-		declOfNum(statsRadiaDataConversyEmpty.count, ["лид", "лида", "лидов"]);
-	statsConversyPersentEmpty.innerHTML = statsRadiaDataConversyEmpty.persent + "%";
+		statsRadialDataConversy.empty + " " + declOfNum(statsRadialDataConversy.empty, ["лид", "лида", "лидов"]);
+	statsConversyPersentEmpty.innerHTML = countEmptyPersentCoversy + "%";
 
 	const statsRadialChart = new Chart(ctx, config);
 

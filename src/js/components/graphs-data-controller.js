@@ -8,385 +8,87 @@ import { drawHeroRadialBitrix } from "./hero-radial-bitrix";
 import { drawStatsRadial } from "./stats-radial-graph";
 import { drawStatsRadialConversy } from "./stats-radial-conversy";
 
+// loader
+import { showLoader, hideLoader, showErrorState1c, showErrorStateBitrix } from "./loader";
+
 // Отсюда брать значение дат на странице битрикса
-const startDateSpanB24 = document.querySelector(".hero__date-b24 .hero__date-text-start");
-const endDateSpanB24 = document.querySelector(".hero__date-b24 .hero__date-text-end");
+const startDateInput = document.getElementById("firstDateInputB24");
+const endDateInput = document.getElementById("endDateInputB24");
+
+// обработанные не отправленные данные 1с
+let dataEx = "";
+
+// даты 1с
+const startDate1c = document.querySelector(".hero__date-1c .hero__date-text-start");
+const endDate1c = document.querySelector(".hero__date-1c .hero__date-text-end");
+
+// oneDealB24Price
+let oneDealB24Price = "";
 
 // данные для makeContent1c
-const data1c = [
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-];
-const heroData1c = [
-	{ label: "1 прием", persentage: "18%", count: 50 },
-	{ label: "2 прием", persentage: "30%", count: 3 },
-	{ label: "3 приема", persentage: "5%", count: 44 },
-	{ label: "4 приема", persentage: "11%", count: 112 },
-	{ label: "5 приемов", persentage: "20%", count: 23 },
-	{ label: "6 приемов", persentage: "12%", count: 35 },
-	{ label: "7 приемов", persentage: "4%", count: 32 },
-	{ label: "8 приемов", persentage: "5%", count: 98 },
-	{ label: "9 приемов", persentage: "12%", count: 23 },
-	{ label: "10+ приемов", persentage: "0.5%", count: 3 },
-];
+let data1c = [];
+let heroData1c = [];
 let heroRadialChart1c = undefined;
 let contactsSlider1cMain = undefined;
 let contactsSlider1cThumbs = undefined;
 const heroList1c = document.querySelector(".hero__list-1c");
-function makeContent1c(data1c, heroData1c) {
+function makeContent1c(data1c, heroData1c, oneLeadPrice) {
 	if (heroRadialChart1c !== undefined) {
 		heroRadialChart1c.destroy();
 	}
 	if (heroList1c.innerHTML !== "") {
 		heroList1c.innerHTML = "";
 	}
-	heroRadialChart1c = drawHeroRadial1c(heroData1c);
+	heroRadialChart1c = drawHeroRadial1c(heroData1c, oneLeadPrice);
 
 	redrawSlider1c(data1c);
 }
 
 // данные для makeContentBitrix
-const bitrixData = [
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-	{ name: "Петров Валерий Александрович", phone: "+79080567822", deals: 5 },
-	{ name: "Максимов Эмир Андреевич", phone: "89060230760", deals: 12 },
-	{ name: "Егоров Лев Александрович", phone: "+7 (908) 056 78 22", deals: 1 },
-	{ name: "Евдокимов Максим Викторович", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Чеботарев Максим Владимирович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Калмыков Артём Михайлович", phone: "+7 (908) 056 78 22", deals: 9 },
-	{ name: "Дмитриев Никита Александрович", phone: "+7 (908) 056 78 22", deals: 14 },
-	{ name: "Макаров Лев Леонович", phone: "+7 (908) 056 78 22", deals: 22 },
-	{ name: "Казакова Александра Егоровна", phone: "+7 (908) 056 78 22", deals: 4 },
-	{ name: "Ильина Алиса Егоровна", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Князев Матвей Васильевич", phone: "+7 (908) 056 78 22", deals: 100 },
-	{ name: "Орлова Полина Степановна", phone: "+7 (908) 056 78 22", deals: 8 },
-	{ name: "Сергеева Серафима Владимировна", phone: "+7 (908) 056 78 22", deals: 5 },
-	{ name: "Юдин Тимофей Петрович", phone: "+7 (908) 056 78 22", deals: 6 },
-	{ name: "Прокофьев Дмитрий Платонович", phone: "+7 (908) 056 78 22", deals: 3 },
-	{ name: "Комаров Лев Дмитриевич", phone: "+7 (908) 056 78 22", deals: 0 },
-];
-const heroDataBitrix = [
-	{ label: "1 прием", persentage: "18%", count: 150 },
-	{ label: "2 приема", persentage: "30%", count: 6 },
-	{ label: "3 приема", persentage: "5%", count: 24 },
-	{ label: "4 приема", persentage: "11%", count: 112 },
-	{ label: "5 приемов", persentage: "20%", count: 43 },
-	{ label: "6 приемов", persentage: "12%", count: 35 },
-	{ label: "7 приемов", persentage: "4%", count: 32 },
-	{ label: "8 приемов", persentage: "5%", count: 98 },
-	{ label: "9 приемов", persentage: "12%", count: 32 },
-	{ label: "10+ приемов", persentage: "0.5%", count: 12 },
-];
+let bitrixData = [];
+let heroDataBitrix = [];
 let heroRadialChartBitrix = undefined;
 let contactsSliderBitrixMain = undefined;
 let contactsSliderBitrixThumbs = undefined;
 const heroListBitrix = document.querySelector(".hero__list-bitrix");
-function makeContentBitrix(bitrixData, heroDataBitrixContacts) {
+function makeContentBitrix(bitrixData, heroDataBitrixContacts, oneLeadPrice) {
 	if (heroRadialChartBitrix !== undefined) {
 		heroRadialChartBitrix.destroy();
 	}
 	if (heroListBitrix.innerHTML !== "") {
 		heroListBitrix.innerHTML = "";
 	}
-	heroRadialChartBitrix = drawHeroRadialBitrix(heroDataBitrixContacts);
-	redrawSliderBitrix(bitrixData);
+
+	if (heroDataBitrixContacts !== [] && oneLeadPrice !== "") {
+		heroRadialChartBitrix = drawHeroRadialBitrix(heroDataBitrixContacts, oneLeadPrice);
+	}
+
+	if (bitrixData !== undefined) {
+		redrawSliderBitrix(bitrixData);
+	}
 }
 
 // данные для статичных диаграмм
 const statsRadialDataConversy = {
-	count1c: 50,
-	bitrix: 79,
-};
-const statsRadiaDataConversyEmpty = {
-	count: 22,
-	persent: 10,
+	count1c: 0,
+	bitrix: 0,
+	empty: 0,
 };
 let statsRadialConversyChart = undefined;
-function drawConversyChart(statsRadialDataConversy, statsRadiaDataConversyEmpty) {
+function drawConversyChart(statsRadialDataConversy) {
 	if (!statsRadialDataConversy) {
 		console.log("statsRadialDataConversy не получена");
-		return;
-	}
-	if (!statsRadiaDataConversyEmpty) {
-		console.log("statsRadiaDataConversyEmpty не получена");
 		return;
 	}
 	if (statsRadialConversyChart !== undefined) {
 		statsRadialConversyChart.destroy();
 	}
-	statsRadialConversyChart = drawStatsRadialConversy(statsRadialDataConversy, statsRadiaDataConversyEmpty);
+	statsRadialConversyChart = drawStatsRadialConversy(statsRadialDataConversy);
 }
 
 const statsRadialData = {
 	count1c: 0,
-	bitrix: 1500000,
+	bitrix: 0,
 };
 let statsRadialChart = undefined;
 function drawSummChart(statsRadialData) {
@@ -400,34 +102,90 @@ function drawSummChart(statsRadialData) {
 	statsRadialChart = drawStatsRadial(statsRadialData);
 }
 
-// что нужно сделать что бы создать страницу 1с ↓↓↓
-// makeContent1c(data1c, heroData1c);
-
-// что нужно сделать что бы создать страницу bitrix ↓↓↓
-// makeContentBitrix(bitrixData, heroDataBitrix);
-
-// что нужно сделать что бы создать секцию графиков со статичным контентом
-// drawConversyChart(statsRadialDataConversy, statsRadiaDataConversyEmpty);
-// drawSummChart(statsRadialData);
-
 const generateButton1c = document.querySelector(".stats__button-generate-1c");
 if (generateButton1c) {
 	generateButton1c.addEventListener("click", () => {
 		if (generateButton1c.classList.contains("blocked")) {
 			return;
 		}
-		makeContent1c(data1c, heroData1c);
+		showLoader();
+		axios
+			.post("https://b24-ost.ru/analytics/file_2.php", {
+				startDate: startDateInput.value == "" ? null : startDateInput.value,
+				endDate: endDateInput.value == "" ? null : endDateInput.value,
+				dataExcel: dataEx,
+			})
+			.then((response) => {
+				startDate1c.innerHTML = response.data.date.split(" ").reverse()[2];
+				endDate1c.innerHTML = response.data.date.split(" ").reverse()[0];
+				statsRadialData.count1c = response.data.totalSum1C;
+				drawSummChart(statsRadialData);
+				statsRadialDataConversy.count1c = response.data.totalContacts1C;
+				drawConversyChart(statsRadialDataConversy);
+				makeContent1c(response.data.data1C, response.data.lead1C, response.data.oneLeadPrice1C);
+				console.log(response.data.bitrixData);
+				bitrixData = response.data.bitrixData;
+				makeContentBitrix(bitrixData, heroDataBitrix, oneDealB24Price);
+				hideLoader();
+			})
+			.catch((e) => {
+				console.log(e);
+				showErrorState1c();
+			});
+		axios
+			.post("https://b24-ost.ru/analytics/file_3.php", {
+				startDate: startDateInput.value == "" ? null : startDateInput.value,
+				endDate: endDateInput.value == "" ? null : endDateInput.value,
+			})
+			.then((response) => {
+				statsRadialDataConversy.empty = response.data.noVisits;
+				drawConversyChart(statsRadialDataConversy);
+			})
+			.catch((e) => {
+				console.log(e);
+				showErrorStateBitrix();
+			});
 	});
 }
 
 const generateButtonBitrix = document.querySelector(".stats__button-generate-bitrix");
 if (generateButtonBitrix) {
 	generateButtonBitrix.addEventListener("click", () => {
-		if (startDateSpanB24.innerHTML && endDateSpanB24.innerHTML) {
-			// axios запрос?
-			// .then()
-			makeContentBitrix(bitrixData, heroDataBitrix);
+		if (generateButtonBitrix.classList.contains("blocked")) {
+			return;
 		}
+		axios
+			.post("https://b24-ost.ru/analytics/file_1.php", {
+				startDate: startDateInput.value == "" ? null : startDateInput.value,
+				endDate: endDateInput.value == "" ? null : endDateInput.value,
+			})
+			.then((response) => {
+				statsRadialData.bitrix = response.data.totalDealB24Price;
+				drawSummChart(statsRadialData);
+				statsRadialDataConversy.bitrix = response.data.totalContactsB24;
+				drawConversyChart(statsRadialDataConversy);
+				heroDataBitrix = response.data.bitrixData;
+				oneDealB24Price = response.data.oneDealB24Price;
+				makeContentBitrix(bitrixData, heroDataBitrix, oneDealB24Price);
+				hideLoader();
+			})
+			.catch((e) => {
+				console.log(e);
+				showErrorStateBitrix();
+			});
+		axios
+			.post("https://b24-ost.ru/analytics/file_3.php", {
+				startDate: startDateInput.value == "" ? null : startDateInput.value,
+				endDate: endDateInput.value == "" ? null : endDateInput.value,
+			})
+			.then((response) => {
+				statsRadialDataConversy.empty = response.data.noVisits;
+				drawConversyChart(statsRadialDataConversy);
+			})
+			.catch((e) => {
+				console.log(e);
+				showErrorStateBitrix();
+			});
 	});
 }
 
@@ -465,24 +223,15 @@ if (fileInputButton !== null && fileInput !== null) {
 	fileInputButton.addEventListener("click", () => {
 		fileInput.click();
 	});
-	fileInput.addEventListener("change", () => {
+	fileInput.addEventListener("change", async () => {
 		generateButton1c.classList.remove("blocked");
-		const fileExtension = fileInput.files[0].name.split(".").pop();
-		if (fileExtension == "xls") {
-			let formData = new FormData();
-			formData.append("userUploadedFile", fileInput.files[0]);
-			// axios
-			// 	.post("", formData, {
-			// 		headers: {
-			// 			"Content-Type": "multipart/form-data",
-			// 		},
-			// 	})
-			// 	.then(function () {
-			// 		console.log("SUCCESS!!");
-			// 	})
-			// 	.catch(function () {
-			// 		console.log("FAILURE!!");
-			// 	});
-		}
+		/* get data as an ArrayBuffer */
+		const file = fileInput.files[0];
+		const data = await file.arrayBuffer();
+
+		/* parse and load first worksheet */
+		const wb = XLSX.read(data);
+		const ws = wb.Sheets[wb.SheetNames[0]];
+		dataEx = XLSX.utils.sheet_to_json(ws, { header: "A" });
 	});
 }
