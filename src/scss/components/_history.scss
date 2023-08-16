@@ -1,0 +1,124 @@
+.history {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	width: 100%;
+	padding-top: 50px;
+	background: var(--white-color);
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity 0.4s ease, visibility 0.4s ease;
+	&-visible {
+		opacity: 1;
+		visibility: visible;
+	}
+	&__container {
+		padding: 30px;
+		padding-left: 50px;
+		border: 1px solid var(--orange-color);
+		border-radius: 10px;
+		box-shadow: 0px 0px 50px 5px rgba(41, 155, 156, 0.2);
+		background: var(--grey-color);
+		display: flex;
+		flex-direction: column;
+		&-title {
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: flex-start;
+			margin-bottom: 15px;
+		}
+		&-button {
+			display: flex;
+			align-items: center;
+			font-size: 10px !important;
+			font-weight: 600 !important;
+			line-height: 12px !important;
+			color: var(--black-color) !important;
+			text-align: center;
+			max-width: 100px;
+			width: 25px;
+			cursor: pointer;
+			overflow: hidden;
+			transition: width 0.2s linear, opacity 0.2s ease;
+			border: 1px solid var(--green-color);
+			border-radius: 5px;
+			height: 25px;
+			padding: 0;
+			background: var(--white-color);
+			&-active {
+				width: 100px;
+				& .history__container-button-inner {
+					opacity: 1;
+				}
+			}
+			&-inner {
+				text-align: center;
+				position: relative;
+				z-index: 50;
+				width: 75px;
+				transition: opacity 0.2s linear 0.2s;
+				opacity: 0;
+			}
+			&:disabled {
+				opacity: 0.5;
+				cursor: not-allowed;
+			}
+		}
+		&-icon {
+			height: 100%;
+		}
+	}
+	&__button {
+		&-back {
+			padding: 14px 39px;
+			color: var(--black-color);
+			font-size: 18px;
+			font-style: normal;
+			font-weight: 400;
+			line-height: normal;
+			border-radius: 7px;
+			border: 1px solid var(--orange-color);
+			transition: background 0.3s ease, color 0.3s ease;
+			&:hover {
+				background: var(--orange-color);
+				color: var(--white-color);
+			}
+		}
+	}
+	&__heading {
+		display: flex;
+		align-items: center;
+		padding: 10px 15px;
+		border-bottom: 1px solid var(--orange-color);
+	}
+	&__cell {
+		padding: 0 4px;
+	}
+	&__period {
+		max-width: 280px;
+		width: 100%;
+		text-align: center;
+	}
+	&__name {
+		max-width: 330px;
+		width: 100%;
+		text-align: center;
+		word-wrap: break-word;
+	}
+	&__date {
+		max-width: 180px;
+		width: 100%;
+		text-align: center;
+	}
+	&__buttons {
+		max-width: 197px;
+		width: 100%;
+		display: flex;
+		justify-content: space-evenly;
+	}
+	&__icon {
+		margin-top: -1px;
+		margin-left: -1px;
+	}
+}

@@ -17,7 +17,7 @@ export function drawSlider1c(data) {
 
 	const list = document.querySelector(`.contacts__list-1c`);
 	const formattedData = [];
-	const chunkSize = 10;
+	let chunkSize = 10;
 	for (let i = 0; i < data1c.length; i += chunkSize) {
 		const chunk = data1c.slice(i, i + chunkSize);
 		formattedData.push(chunk);

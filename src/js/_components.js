@@ -11,3 +11,5 @@ import "./components/date-buttons";
 import "./components/buttons-height";
 import "./components/graphs-data-controller";
 import "./components/loader";
+import "./components/history-buttons";
+import "./components/history-anim";
