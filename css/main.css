@@ -10,7 +10,8 @@
   --grey-color: #f3f3f3;
   --blue-color: #299b9c;
   --light-blue-color: #34e0e1;
-  --spinner-green-color: #299b9c
+  --spinner-green-color: #299b9c;
+  --green-color: #299b9c
 }
 .custom-checkbox__field:checked + .custom-checkbox__content::after {
   opacity: 1
@@ -352,7 +353,7 @@ section:not(:last-child) {
   justify-content: center
 }
 .hero__date-text {
-  font-family: Inter;
+  font-family: var(--font-family);
   font-size: 18px;
   font-weight: 400;
   line-height: 22px
@@ -809,7 +810,7 @@ input[type=date]:not(.has-value):before {
 }
 .contacts__container-count {
   padding: 5px 10px;
-  font-family: Inter;
+  font-family: var(--font-family);
   font-size: 18px;
   line-height: 22px;
   border: 1px solid rgba(0,0,0,.2509803922);
@@ -1107,4 +1108,153 @@ input[type=date]:not(.has-value):before {
     -webkit-box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em;
     box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em
   }
+}
+.history {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  width: 100%;
+  padding-top: 50px;
+  background: var(--white-color);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: opacity .4s,visibility .4s;
+  transition: opacity .4s,visibility .4s
+}
+.history-visible {
+  opacity: 1;
+  visibility: visible
+}
+.history__container {
+  padding: 30px 30px 30px 50px;
+  border: 1px solid var(--orange-color);
+  border-radius: 10px;
+  -webkit-box-shadow: 0 0 50px 5px rgba(41,155,156,.2);
+  box-shadow: 0 0 50px 5px rgba(41,155,156,.2);
+  background: var(--grey-color);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column
+}
+.history__container-title {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: flex-start;
+  margin-bottom: 15px
+}
+.history__container-button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-size: 10px!important;
+  font-weight: 600!important;
+  line-height: 12px!important;
+  color: var(--black-color)!important;
+  text-align: center;
+  max-width: 100px;
+  width: 25px;
+  cursor: pointer;
+  overflow: hidden;
+  -webkit-transition: width .2s linear,opacity .2s;
+  transition: width .2s linear,opacity .2s;
+  border: 1px solid var(--green-color);
+  border-radius: 5px;
+  height: 25px;
+  padding: 0;
+  background: var(--white-color)
+}
+.history__container-button-active {
+  width: 100px
+}
+.history__container-button-active .history__container-button-inner {
+  opacity: 1
+}
+.history__container-button-inner {
+  text-align: center;
+  position: relative;
+  z-index: 50;
+  width: 75px;
+  -webkit-transition: opacity .2s linear .2s;
+  transition: opacity .2s linear .2s;
+  opacity: 0
+}
+.history__container-button:disabled {
+  opacity: .5;
+  cursor: not-allowed
+}
+.history__container-icon {
+  height: 100%
+}
+.history__button-back {
+  padding: 14px 39px;
+  color: var(--black-color);
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border-radius: 7px;
+  border: 1px solid var(--orange-color);
+  -webkit-transition: background .3s,color .3s;
+  transition: background .3s,color .3s
+}
+.history__button-back:hover {
+  background: var(--orange-color);
+  color: var(--white-color)
+}
+.history__heading {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--orange-color)
+}
+.history__cell {
+  padding: 0 4px
+}
+.history__period {
+  max-width: 280px;
+  width: 100%;
+  text-align: center
+}
+.history__name {
+  max-width: 330px;
+  width: 100%;
+  text-align: center;
+  word-wrap: break-word
+}
+.history__date {
+  max-width: 180px;
+  width: 100%;
+  text-align: center
+}
+.history__buttons {
+  max-width: 197px;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: space-evenly;
+  -ms-flex-pack: space-evenly;
+  justify-content: space-evenly
+}
+.history__icon {
+  margin-top: -1px;
+  margin-left: -1px
 }

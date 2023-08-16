@@ -43,6 +43,50 @@ if (startDateInput !== null && endDateInput !== null) {
 
 /***/ }),
 
+/***/ 847:
+/***/ (() => {
+
+const historySection = document.querySelector(".history");
+const historyButton = document.querySelector(".stats__button-history-show");
+if (historySection && historyButton) {
+  historyButton.addEventListener("click", () => {
+    historySection.classList.add("history-visible");
+  });
+}
+const historyButtonBack = document.querySelector(".history__button-back");
+if (historySection && historyButtonBack) {
+  historyButtonBack.addEventListener("click", () => {
+    historySection.classList.remove("history-visible");
+  });
+}
+
+/***/ }),
+
+/***/ 744:
+/***/ (() => {
+
+const historyButtons = document.querySelectorAll(".history__container-button");
+historyButtons.forEach(button => {
+  button.addEventListener("mouseenter", e => {
+    toggleActive(e);
+  });
+  button.addEventListener("mouseleave", e => {
+    toggleActive(e);
+  });
+});
+function toggleActive(event) {
+  const hoveredButton = event.target;
+  if (!hoveredButton.classList.contains("history__container-button-active")) {
+    let children = hoveredButton.parentNode.querySelectorAll(".history__container-button");
+    children.forEach(child => {
+      child.classList.remove("history__container-button-active");
+    });
+    hoveredButton.classList.add("history__container-button-active");
+  }
+}
+
+/***/ }),
+
 /***/ 316:
 /***/ (() => {
 
@@ -43091,7 +43135,7 @@ function drawSlider1c(data) {
 	`;
   const list = document.querySelector(`.contacts__list-1c`);
   const formattedData = [];
-  const chunkSize = 10;
+  let chunkSize = 10;
   for (let i = 0; i < data1c.length; i += chunkSize) {
     const chunk = data1c.slice(i, i + chunkSize);
     formattedData.push(chunk);
@@ -47015,8 +47059,14 @@ if (fileInputButton !== null && fileInput !== null) {
     });
   });
 }
+// EXTERNAL MODULE: ./src/js/components/history-buttons.js
+var history_buttons = __webpack_require__(744);
+// EXTERNAL MODULE: ./src/js/components/history-anim.js
+var history_anim = __webpack_require__(847);
 ;// CONCATENATED MODULE: ./src/js/_components.js
 // import "./components/get-graphs-data";
+
+
 
 
 
