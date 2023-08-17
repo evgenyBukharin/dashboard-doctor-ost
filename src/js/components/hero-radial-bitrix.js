@@ -25,8 +25,8 @@ export function drawHeroRadialBitrix(data, oneLeadPrice) {
 	<span class="hero__text hero__text-count title__h4"></span>`;
 
 	const colors = [
-		"#E15335",
 		"#299B9C",
+		"#E15335",
 		"#469C78",
 		"#52469C",
 		"#D31DA0",
@@ -123,14 +123,14 @@ export function drawHeroRadialBitrix(data, oneLeadPrice) {
 							color: "transparent",
 						},
 						{
-							text: "Стоимость одного лида:",
+							text: "Средний чек:",
 							font: {
 								size: 18,
 								weight: "400",
 							},
 						},
 						{
-							text: oneLeadPrice,
+							text: oneLeadPrice + " руб.",
 							font: {
 								size: 24,
 								weight: "500",

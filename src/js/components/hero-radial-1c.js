@@ -25,8 +25,8 @@ export function drawHeroRadial1c(data, oneLeadPrice) {
 	const heroData1c = data;
 
 	const colors = [
-		"#E15335",
 		"#299B9C",
+		"#E15335",
 		"#469C78",
 		"#52469C",
 		"#D31DA0",
@@ -123,14 +123,14 @@ export function drawHeroRadial1c(data, oneLeadPrice) {
 							color: "transparent",
 						},
 						{
-							text: "Стоимость одного лида:",
+							text: "Средний чек:",
 							font: {
 								size: 18,
 								weight: "400",
 							},
 						},
 						{
-							text: oneLeadPrice,
+							text: oneLeadPrice + " руб.",
 							font: {
 								size: 24,
 								weight: "500",
