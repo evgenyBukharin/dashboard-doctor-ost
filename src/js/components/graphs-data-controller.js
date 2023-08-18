@@ -251,7 +251,7 @@ const rowInnerHtml = `
 		<span class="history__cell history__name">Аналитика лидов за май 2023</span>
 		<span class="history__cell history__date">14.08.2023</span>
 		<span class="history__cell history__buttons">
-			<a href="#" class="history__container-button history__container-button-watch">
+			<a href="#" target="_blank" class="history__container-button history__container-button-watch">
 				<div class="history__container-icon">
 					<svg
 						class="history__icon history__icon-watch"
@@ -321,7 +321,7 @@ axios
 			newRow.querySelector(".history__period").innerHTML = row.period;
 			newRow.querySelector(".history__name").innerHTML = row.name;
 			newRow.querySelector(".history__date").innerHTML = row.date;
-			newRow.querySelector(".history__container-button-watch").setAttribute("href", row.fileLink);
+			newRow.querySelector(".history__container-button-watch").setAttribute("href", row.publicFileLink);
 			newRow.querySelector(".history__container-button-download").setAttribute("href", row.fileLink);
 			newRow.querySelector(".history__container-button-dashboard").addEventListener("click", async () => {
 				const file = await fetch(row.fileLink);
